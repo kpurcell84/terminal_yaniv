@@ -18,6 +18,7 @@ class Game:
 		player['name'] = "Smeagol"
 		player['score'] = 0
 		player['hand'] = []
+		player['ai'] = False
 		players.append(player)
 		# hardcoded ai players
 		for i in range(2,5):
@@ -25,6 +26,7 @@ class Game:
 			player['name'] = "Player " + str(i)
 			player['score'] = 0
 			player['hand'] = []
+			player['ai'] = True
 			players.append(player)
 		return players
 
@@ -43,10 +45,16 @@ class Game:
 	# extremely basic ai which discards highest card and picks
 	# up from the deck
 	def aiTurn(self, pid):
+		# discard highest card
 		dcards = []
 		high_card = self.players[pid]['hand'].pop(0)
 		dcards.append(high_card)
 		self.deck.discardCards(dcards)
+
+		# pick up from deck
+		new_card = self.deck.drawCard()
+		self.players[pid]['hand'].append(new_card)
+		self.sortHand(pid)
 
 	def checkRoundScores(self):
 		pass
@@ -63,16 +71,22 @@ class Game:
 					player['hand'].append(self.deck.drawCard())
 				self.sortHand(pid)
 			print self.players
-			break
+			# break
 			# round loop
+			i = 0
 			while 1:
 				for pid,player in enumerate(self.players):
 					if player['ai']:
 						self.aiTurn(pid)
 					else:
 						self.humanTurn(pid)
-					if yaniv:
+					if self.yaniv:
 						break
+				if i >= 5:
+					break
+				i += 1
+				print self.players
+			break
 			self.checkRoundScores()
 
 
