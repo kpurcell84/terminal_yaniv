@@ -28,16 +28,22 @@ class Deck:
 			card = (c[0], c[1], sort_val)
 			self.cards.append(card)
 
-	def drawCards(self, num):
-		# reshuffle case when draw pile is almost empty
-		if num > len(self.cards):
+	def drawCard(self):
+		# reshuffle case when draw pile is empty
+		if len(self.cards) == 0:
+			last_discard = self.discards.pop(0)
 			self.cards = self.discards
 			self.discards = []
+			self.discards.insert(0, last_discard)
 
-		hand = random.sample(self.cards, num)
-		for card in hand:
-			self.cards.remove(card)
-		return hand
+		card = random.choice(self.cards)
+		self.cards.remove(card)
+		return card
+
+	def drawDiscard(self):
+		card = random.choice(self.cards)
+		self.discards.remove(card)
+		return card
 
 	def discardCards(self, dcards):
 		for dcard in dcards:
