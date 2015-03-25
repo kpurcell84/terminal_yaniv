@@ -1,4 +1,4 @@
-import cards
+from cards import RenderCards
 from deck import Deck
 
 class Game:
@@ -40,7 +40,19 @@ class Game:
 		self.players[pid]['hand'].sort(key=lambda tup: tup[2], reverse=True)
 
 	def humanTurn(self, pid):
-		pass
+		ui = RenderCards()
+		# wait for player to choose cards
+		selected_cards = ui.chooseCards(self.players[pid]['hand'])
+		# remove cards from hand and discard 
+		dcards = []
+		for card in selected_cards:
+			self.players[pid]['hand'].remove(card)
+			dcards.append(card)
+		self.deck.discardCards(dcards)
+
+		ui = RenderCards()
+		ui.displayHand(self.players[pid]['hand'])
+
 
 	# extremely basic ai which discards highest card and picks
 	# up from the deck

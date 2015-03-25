@@ -47,7 +47,7 @@ class Deck:
 
 	def discardCards(self, dcards):
 		for dcard in dcards:
-			self.discards.append(dcard)
+			self.discards.insert(0, dcard)
 
 
 # deck = Deck()

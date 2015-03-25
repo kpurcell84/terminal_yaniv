@@ -2,6 +2,7 @@ from deck import Deck
 
 import curses
 import time
+import sys
 
 ## start curse app
 # stdscr = curses.initscr()
@@ -17,7 +18,7 @@ import time
 # curses.curs_set(1)
 # curses.endwin()
 
-class PlayerCards:
+class RenderCards:
 	num_cards = 5
 	cur_card = 0
 	hand_begin_x = 5
@@ -26,9 +27,10 @@ class PlayerCards:
 	card_width = 9
 	pcards = []
 	stdscr = None
+	hand = None
 
 	def __init__(self):
-		curses.wrapper(self.driver)
+		pass
 
 	def nextCard(self):
 		# unbold cur_card
@@ -137,9 +139,11 @@ class PlayerCards:
 		win.box()
 		win.refresh()
 
-	def driver(self, stdscr):
-		deck = Deck()
+	def chooseCards(self, hand):
+		self.hand = hand
+		return curses.wrapper(self.chooseCardsHelper)
 
+	def chooseCardsHelper(self, stdscr):
 		curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
 		stdscr.bkgd(' ', curses.color_pair(1))
 		stdscr.clear()
@@ -147,16 +151,12 @@ class PlayerCards:
 		stdscr.refresh()
 		self.stdscr = stdscr
 		
-		# create player hand
-		hand = deck.drawCards(5)
-		# sort hand based on sort value
-		hand.sort(key=lambda tup: tup[2], reverse=True)
-		self.displayHand(hand)
+		self.displayHand(self.hand)
 		
 		while 1:
 			c = stdscr.getch()
 			if c == ord('q'):
-				break
+				sys.exit(0)
 			elif c == curses.KEY_RIGHT:
 				self.nextCard()
 			elif c == curses.KEY_LEFT:
@@ -169,7 +169,24 @@ class PlayerCards:
 					self.pcards[self.cur_card]['selected'] = True
 					self.displaySelected(True)
 			elif c == 10: # enter key
-				break
+				selected_cards = []
+				selected_val = ""
+				valid = True
+				# add cids of selected cards to a list
+				for cid,pcard in enumerate(self.pcards):
+					if pcard['selected']:
+						selected_cards.append(self.hand[cid])
+						# check to make sure they're all the same value
+						if selected_val == "":
+							selected_val = pcard['val']
+						elif pcard['val'] != selected_val:
+							valid = False
+							break
+				if valid:
+					return selected_cards
+				else:
+					# TODO display error message
+					pass
 	
 if __name__=='__main__':
-    PlayerCards()
+    RenderCards()
