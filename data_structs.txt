@@ -1,0 +1,19 @@
+card = [val, suit, sort_val]
+
+player = {}
+	str name
+	int score
+	card[] hand
+	bool ai
+	socketclient client
+
+pre_turn_data = {}
+	card[] hand
+	card discard_top
+	bool roundover
+	bool gameover
+
+post_turn_data = {}
+	card[] discards
+	bool deck_draw
+	bool yaniv

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from deck import Deck
 
 import curses
@@ -182,11 +184,12 @@ class RenderCards:
 						elif pcard['val'] != selected_val:
 							valid = False
 							break
-				if valid:
+				if valid and selected_cards:
+					print "smeags"
 					return selected_cards
 				else:
 					# TODO display error message
-					pass
+					continue
 	
 if __name__=='__main__':
     RenderCards()

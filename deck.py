@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import random
 import itertools
 
@@ -8,8 +10,17 @@ class Deck:
 
 		vals = 'A23456789TJQK'
 		suits = 'cdhs'
-		deck_tuple = tuple(''.join(card) for card in itertools.product(vals, suits))
-		for c in deck_tuple:
+
+		# make the deck
+		deck_list = []
+		for val in vals:
+			for suit in suits:
+				card_list = []
+				card_list.append(val)
+				card_list.append(suit)
+				deck_list.append(card_list)
+
+		for c in deck_list:
 			# give it a value for sorting
 			sort_val = 0
 			try:
@@ -25,8 +36,12 @@ class Deck:
 					sort_val = 12
 				elif c[0] == 'K':
 					sort_val = 13
-			card = (c[0], c[1], sort_val)
+			card = [c[0], c[1], sort_val]
 			self.cards.append(card)
+
+		random.shuffle(self.cards)
+		# add one card to discard pile
+		self.discards.append(self.cards.pop())
 
 	def drawCard(self):
 		# reshuffle case when draw pile is empty
@@ -34,15 +49,14 @@ class Deck:
 			last_discard = self.discards.pop(0)
 			self.cards = self.discards
 			self.discards = []
-			self.discards.insert(0, last_discard)
+			self.discards.append(last_discard)
+			random.shuffle(self.cards)
 
-		card = random.choice(self.cards)
-		self.cards.remove(card)
+		card = self.cards.pop(0)
 		return card
 
 	def drawDiscard(self):
-		card = random.choice(self.cards)
-		self.discards.remove(card)
+		card = self.discards.pop(0)
 		return card
 
 	def discardCards(self, dcards):
