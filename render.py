@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from deck import Deck
-
 import curses
 import time
 import sys
@@ -20,13 +18,14 @@ import sys
 # curses.curs_set(1)
 # curses.endwin()
 
-class RenderCards:
-	num_cards = 5
+class RenderUI:
 	cur_card = 0
 	hand_begin_x = 5
-	hand_begin_y = 5
+	hand_begin_y = 14
 	card_height = 7
 	card_width = 9
+	discard_begin_x = 5
+	discard_begin_y = 5
 	pcards = []
 	stdscr = None
 	hand = None
@@ -39,7 +38,7 @@ class RenderCards:
 		self.displayCard(self.pcards[self.cur_card], False)
 
 		self.cur_card += 1
-		if self.cur_card >= self.num_cards:
+		if self.cur_card >= len(self.pcards):
 			self.cur_card = 0
 		self.displayCard(self.pcards[self.cur_card], True)
 
@@ -49,7 +48,7 @@ class RenderCards:
 
 		self.cur_card -= 1
 		if self.cur_card < 0:
-			self.cur_card = self.num_cards-1
+			self.cur_card = len(self.pcards)-1
 		self.displayCard(self.pcards[self.cur_card], True)
 
 	def displaySelected(self, display):
@@ -61,27 +60,26 @@ class RenderCards:
 			self.stdscr.addch(y_coord, x_coord, ' ')
 		self.stdscr.refresh()
 
-	def displayHand(self, hand):
-		for i,card in enumerate(hand):
+	def displayCards(self, cards, begin_y, begin_x):
+		for i,card in enumerate(cards):
 			pcard = {}
 			if card[0] == 'T':
 				pcard['val'] = "10"
 			else:
 				pcard['val'] = card[0]
 			pcard['suit'] = card[1]
-			pcard['window'] = curses.newwin(self.card_height, self.card_width, self.hand_begin_y, self.hand_begin_x+(i*self.card_width))
+			pcard['window'] = curses.newwin(self.card_height, self.card_width, begin_y, begin_x+(i*self.card_width))
 			pcard['window'].bkgd(' ', curses.color_pair(1))
 			pcard['selected'] = False
 			self.pcards.append(pcard)
 
+		print self.pcards
 		for pcard in self.pcards:
 			self.displayCard(pcard, False)
 		# Set first card to bold
 		self.displayCard(self.pcards[self.cur_card], True)
 
 	def displayCard(self, pcard, bold):
-		curses.init_pair(2, curses.COLOR_RED, curses.COLOR_WHITE)
-
 		win = pcard['window']
 		# diamonds
 		if pcard['suit'] == "d":
@@ -141,11 +139,20 @@ class RenderCards:
 		win.box()
 		win.refresh()
 
-	def chooseCards(self, hand):
-		self.hand = hand
-		return curses.wrapper(self.chooseCardsHelper)
+	def renderDiscards(self, cards):
+		self.displayCards(cards, discard_begin_y, discard_begin_x)
 
-	def chooseCardsHelper(self, stdscr):
+	def eraseCards(self):
+		for pcard in self.pcards:
+			pcard['window'].erase()
+			pcard['window'].refresh()
+		self.pcards = []
+
+	def chooseCards(self, hand):
+		# self.hand = hand
+		return curses.wrapper(self.chooseCardsHelper, hand)
+
+	def chooseCardsHelper(self, stdscr, hand):
 		curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
 		stdscr.bkgd(' ', curses.color_pair(1))
 		stdscr.clear()
@@ -153,7 +160,7 @@ class RenderCards:
 		stdscr.refresh()
 		self.stdscr = stdscr
 		
-		self.displayHand(self.hand)
+		self.displayCards(hand, self.hand_begin_y, self.hand_begin_x)
 		
 		while 1:
 			c = stdscr.getch()
@@ -177,7 +184,7 @@ class RenderCards:
 				# add cids of selected cards to a list
 				for cid,pcard in enumerate(self.pcards):
 					if pcard['selected']:
-						selected_cards.append(self.hand[cid])
+						selected_cards.append(hand[cid])
 						# check to make sure they're all the same value
 						if selected_val == "":
 							selected_val = pcard['val']
@@ -185,7 +192,7 @@ class RenderCards:
 							valid = False
 							break
 				if valid and selected_cards:
-					print "smeags"
+					self.eraseCards()
 					return selected_cards
 				else:
 					# TODO display error message

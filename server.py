@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-from cards import RenderCards
 from deck import Deck
 
 import socket
+import jsocket
 import sys
 import time
 import json
@@ -53,17 +53,18 @@ class Game:
                 player['client'] = client
                 players.append(player)
                 # respond to client
+                time.sleep(1)
                 client.send(data)
                 break
 
-        # hardcoded ai players
-        for i in range(1,4):
-            player = {}
-            player['name'] = "Player " + str(i)
-            player['score'] = 0
-            player['hand'] = []
-            player['ai'] = True
-            players.append(player)
+        # # hardcoded ai players
+        # for i in range(1,4):
+        #     player = {}
+        #     player['name'] = "Player " + str(i)
+        #     player['score'] = 0
+        #     player['hand'] = []
+        #     player['ai'] = True
+        #     players.append(player)
         return players
 
     def checkWin(self):
@@ -86,12 +87,20 @@ class Game:
         pre_turn_data['discard_top'] = self.deck.discards[0]
         pre_turn_data['gameover'] = False
         pre_turn_data['roundover'] = False
+        print "pre_turn_data:"
+        print pre_turn_data
+        print ""
         client.send(json.dumps(pre_turn_data))
 
         # wait for client to make a decision
         post_turn_data = json.loads(client.recv(self.size))
         print "post_turn_data:"
         print post_turn_data
+        print ""
+
+        print "BEFORE HAND:"
+        print self.players[pid]['hand']
+        print ""
 
         # check if client called a valid yaniv
         if post_turn_data['yaniv']:
@@ -111,6 +120,11 @@ class Game:
         self.deck.discardCards(post_turn_data['discards'])
         for discard in post_turn_data['discards']:
             self.players[pid]['hand'].remove(discard)
+
+
+        print "AFTER HAND:"
+        print self.players[pid]['hand']
+        print ""
 
         # send client back new hand
         pre_turn_data = {}
@@ -149,9 +163,9 @@ class Game:
                     dealt_card = self.deck.drawCard()
                     self.insertCard(pid, dealt_card)
             print self.players
+            print ""
             # break
             # round loop
-            i = 0
             while 1:
                 for pid,player in enumerate(self.players):
                     if player['ai']:
@@ -160,10 +174,9 @@ class Game:
                         self.humanTurn(pid)
                     if self.yaniv:
                         break
-                if i >= 5:
-                    break
-                i += 1
+                print "players:"
                 print self.players
+                print ""
             break
             self.checkRoundScores()
 
