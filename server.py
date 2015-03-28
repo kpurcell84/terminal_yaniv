@@ -13,8 +13,6 @@ class Game:
     deck = None
     yaniv = False
     yaniv_pid = -1
-    s = None # socket
-    size = 1024 # socket size
 
     def __init__(self):
         self.players = self.getPlayers()
@@ -25,46 +23,36 @@ class Game:
       
         host = '' 
         port = 50000 
-        backlog = 5 
+        backlog = 5
         
-        # open socket
-        try: 
-            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.s.bind((host,port)) 
-            self.s.listen(backlog) 
-        except socket.error, (value,message): 
-            if self.s: 
-                self.s.close() 
-            print "Could not open socket: " + message 
-            sys.exit(1) 
+        server = jsocket.JsonServer(port=port)
         # wait for a single player
         print "Waiting for players..."
         while 1: 
-            client, address = self.s.accept() 
-            data = client.recv(self.size) 
-            if data:
-                print str(data) + " has joined" 
+            server.accept_connection()
+            name_data = server.read_obj()
+            if name_data:
+                print name_data['name'] + " has joined" 
                 player = {}
-                player['name'] = str(data)
+                player['name'] = name_data['name']
                 player['score'] = 0
                 player['hand'] = []
                 player['ai'] = False
-                player['client'] = client
+                player['server'] = server
                 players.append(player)
-                # respond to client
+                # respond to client with name
                 time.sleep(1)
-                client.send(data)
+                server.send_obj(name_data)
                 break
 
-        # # hardcoded ai players
-        # for i in range(1,4):
-        #     player = {}
-        #     player['name'] = "Player " + str(i)
-        #     player['score'] = 0
-        #     player['hand'] = []
-        #     player['ai'] = True
-        #     players.append(player)
+        # hardcoded ai players
+        for i in range(1,4):
+            player = {}
+            player['name'] = "Player " + str(i)
+            player['score'] = 0
+            player['hand'] = []
+            player['ai'] = True
+            players.append(player)
         return players
 
     def checkWin(self):
@@ -79,7 +67,7 @@ class Game:
         self.players[pid]['hand'].sort(key=lambda tup: tup[2], reverse=True)
 
     def humanTurn(self, pid):
-        client = self.players[pid]['client']
+        server = self.players[pid]['server']
 
         # send pre turn data to client
         pre_turn_data = {}
@@ -90,10 +78,10 @@ class Game:
         print "pre_turn_data:"
         print pre_turn_data
         print ""
-        client.send(json.dumps(pre_turn_data))
+        server.send_obj(pre_turn_data)
 
         # wait for client to make a decision
-        post_turn_data = json.loads(client.recv(self.size))
+        post_turn_data = server.read_obj()
         print "post_turn_data:"
         print post_turn_data
         print ""
@@ -127,12 +115,12 @@ class Game:
         print ""
 
         # send client back new hand
-        pre_turn_data = {}
-        pre_turn_data['hand'] = self.players[pid]['hand']
-        pre_turn_data['discard_top'] = self.deck.discards[0]
-        pre_turn_data['gameover'] = False
-        pre_turn_data['roundover'] = False
-        client.send(json.dumps(pre_turn_data))
+        # pre_turn_data = {}
+        # pre_turn_data['hand'] = self.players[pid]['hand']
+        # pre_turn_data['discard_top'] = self.deck.discards[0]
+        # pre_turn_data['gameover'] = False
+        # pre_turn_data['roundover'] = False
+        # server.send_obj(pre_turn_data)
         
 
     # extremely basic ai which discards highest card and picks

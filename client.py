@@ -2,33 +2,25 @@
 
 from render import RenderUI
 
-import socket 
+import socket
+import jsocket
 import sys
 import json
 
-host = 'localhost' 
 port = 50000 
-size = 1024 
-server = None
-try: 
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.connect((host,port)) 
-except socket.error, (value,message): 
-    if server: 
-        server.close() 
-    print "Could not open socket: " + message 
-    sys.exit(1)
+
+client = jsocket.JsonClient(port=50000)
+client.connect()
 
 name = raw_input("Enter your name: ")
-server.send(name)
-data = server.recv(size)
-if data == name:
+client.send_obj({'name':name})
+name_data = client.read_obj()
+if name_data['name'] == name:
 	print "Successfully joined"
 
 ui = RenderUI()
 while 1:
-	pre_turn_data = json.loads(server.recv(size))
+	pre_turn_data = client.read_obj()
 	# check if round/game ended
 	if pre_turn_data['roundover']:
 		# TODO display end of round stats
@@ -47,5 +39,5 @@ while 1:
 	post_turn_data['discards'] = discards
 	post_turn_data['deck_draw'] = True
 	post_turn_data['yaniv'] = False
-	server.send(json.dumps(post_turn_data))
+	client.send_obj(post_turn_data)
 

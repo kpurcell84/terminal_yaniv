@@ -149,10 +149,10 @@ class RenderUI:
 		self.pcards = []
 
 	def chooseCards(self, hand):
-		# self.hand = hand
 		return curses.wrapper(self.chooseCardsHelper, hand)
 
 	def chooseCardsHelper(self, stdscr, hand):
+		self.cur_card = 0
 		curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
 		stdscr.bkgd(' ', curses.color_pair(1))
 		stdscr.clear()
