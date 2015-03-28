@@ -30,7 +30,7 @@ while 1:
 	print "pre_turn_data['hand']:"
 	print pre_turn_data['hand']
 	print ""
-	discards = ui.chooseCards(pre_turn_data['hand'])
+	discards = ui.chooseHand(pre_turn_data['hand'])
 	print "discards:"
 	print discards
 	print ""
@@ -41,3 +41,6 @@ while 1:
 	post_turn_data['yaniv'] = False
 	client.send_obj(post_turn_data)
 
+	# receive updated data and display
+	pre_turn_data = client.read_obj()
+	ui.renderHand(pre_turn_data['hand'])

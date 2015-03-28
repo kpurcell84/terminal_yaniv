@@ -27,40 +27,41 @@ class RenderUI:
 	discard_begin_x = 5
 	discard_begin_y = 5
 	pcards = []
+	select_win = None
 	stdscr = None
 	hand = None
 
 	def __init__(self):
 		pass
 
-	def nextCard(self):
+	def _nextCard(self):
 		# unbold cur_card
-		self.displayCard(self.pcards[self.cur_card], False)
+		self._displayCard(self.pcards[self.cur_card], False)
 
 		self.cur_card += 1
 		if self.cur_card >= len(self.pcards):
 			self.cur_card = 0
-		self.displayCard(self.pcards[self.cur_card], True)
+		self._displayCard(self.pcards[self.cur_card], True)
 
-	def prevCard(self):
+	def _prevCard(self):
 		# unbold cur_card
-		self.displayCard(self.pcards[self.cur_card], False)
+		self._displayCard(self.pcards[self.cur_card], False)
 
 		self.cur_card -= 1
 		if self.cur_card < 0:
 			self.cur_card = len(self.pcards)-1
-		self.displayCard(self.pcards[self.cur_card], True)
+		self._displayCard(self.pcards[self.cur_card], True)
 
-	def displaySelected(self, display):
-		y_coord = self.hand_begin_y + self.card_height
-		x_coord = self.hand_begin_x + self.card_width/2 + self.cur_card*self.card_width
+	def _displaySelected(self, display):
+		x_coord = self.card_width/2 + self.cur_card*self.card_width
+		# print x_coord
 		if display:
-			self.stdscr.addch(y_coord, x_coord, 'X')
+			self.select_win.addch(0, x_coord, 'X')
 		else:
-			self.stdscr.addch(y_coord, x_coord, ' ')
-		self.stdscr.refresh()
+			self.select_win.addch(0, x_coord, ' ')
+		self.select_win.refresh()
 
-	def displayCards(self, cards, begin_y, begin_x):
+	def _displayCards(self, cards, begin_y, begin_x):
 		for i,card in enumerate(cards):
 			pcard = {}
 			if card[0] == 'T':
@@ -73,13 +74,13 @@ class RenderUI:
 			pcard['selected'] = False
 			self.pcards.append(pcard)
 
-		print self.pcards
+		# print self.pcards
 		for pcard in self.pcards:
-			self.displayCard(pcard, False)
+			self._displayCard(pcard, False)
 		# Set first card to bold
-		self.displayCard(self.pcards[self.cur_card], True)
+		self._displayCard(self.pcards[self.cur_card], True)
 
-	def displayCard(self, pcard, bold):
+	def _displayCard(self, pcard, bold):
 		win = pcard['window']
 		# diamonds
 		if pcard['suit'] == "d":
@@ -139,19 +140,24 @@ class RenderUI:
 		win.box()
 		win.refresh()
 
-	def renderDiscards(self, cards):
-		self.displayCards(cards, discard_begin_y, discard_begin_x)
-
-	def eraseCards(self):
+	def _eraseCards(self):
+		self.select_win.erase()
+		self.select_win.refresh()
 		for pcard in self.pcards:
 			pcard['window'].erase()
 			pcard['window'].refresh()
 		self.pcards = []
 
-	def chooseCards(self, hand):
-		return curses.wrapper(self.chooseCardsHelper, hand)
+	def renderDiscards(self, cards):
+		self._displayCards(cards, self.discard_begin_y, self.discard_begin_x)
 
-	def chooseCardsHelper(self, stdscr, hand):
+	def renderHand(self, hand):
+		self._displayCards(hand, self.hand_begin_y, self.hand_begin_x)
+
+	def chooseHand(self, hand):
+		return curses.wrapper(self._chooseHandHelper, hand)
+
+	def _chooseHandHelper(self, stdscr, hand):
 		self.cur_card = 0
 		curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
 		stdscr.bkgd(' ', curses.color_pair(1))
@@ -159,24 +165,28 @@ class RenderUI:
 		curses.curs_set(0)
 		stdscr.refresh()
 		self.stdscr = stdscr
-		
-		self.displayCards(hand, self.hand_begin_y, self.hand_begin_x)
+
+		# build window beneath hand for card selection
+		self.select_win = curses.newwin(1, (self.card_width+1)*5, self.hand_begin_y + self.card_height, self.hand_begin_x)
+		self.select_win.bkgd(' ', curses.color_pair(1))
+
+		self._displayCards(hand, self.hand_begin_y, self.hand_begin_x)
 		
 		while 1:
 			c = stdscr.getch()
 			if c == ord('q'):
 				sys.exit(0)
 			elif c == curses.KEY_RIGHT:
-				self.nextCard()
+				self._nextCard()
 			elif c == curses.KEY_LEFT:
-				self.prevCard()
+				self._prevCard()
 			elif c == 32: # space key
 				if self.pcards[self.cur_card]['selected']:
 					self.pcards[self.cur_card]['selected'] = False
-					self.displaySelected(False)
+					self._displaySelected(False)
 				else:
 					self.pcards[self.cur_card]['selected'] = True
-					self.displaySelected(True)
+					self._displaySelected(True)
 			elif c == 10: # enter key
 				selected_cards = []
 				selected_val = ""
@@ -192,7 +202,7 @@ class RenderUI:
 							valid = False
 							break
 				if valid and selected_cards:
-					self.eraseCards()
+					self._eraseCards()
 					return selected_cards
 				else:
 					# TODO display error message

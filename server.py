@@ -86,10 +86,6 @@ class Game:
         print post_turn_data
         print ""
 
-        print "BEFORE HAND:"
-        print self.players[pid]['hand']
-        print ""
-
         # check if client called a valid yaniv
         if post_turn_data['yaniv']:
             self.yaniv = True
@@ -109,18 +105,15 @@ class Game:
         for discard in post_turn_data['discards']:
             self.players[pid]['hand'].remove(discard)
 
-
-        print "AFTER HAND:"
-        print self.players[pid]['hand']
-        print ""
-
         # send client back new hand
-        # pre_turn_data = {}
-        # pre_turn_data['hand'] = self.players[pid]['hand']
-        # pre_turn_data['discard_top'] = self.deck.discards[0]
-        # pre_turn_data['gameover'] = False
-        # pre_turn_data['roundover'] = False
-        # server.send_obj(pre_turn_data)
+        pre_turn_data = {}
+        pre_turn_data['hand'] = self.players[pid]['hand']
+        pre_turn_data['discard_top'] = self.deck.discards[0]
+        pre_turn_data['gameover'] = False
+        pre_turn_data['roundover'] = False
+        server.send_obj(pre_turn_data)
+
+        time.sleep(5)
         
 
     # extremely basic ai which discards highest card and picks
@@ -138,7 +131,6 @@ class Game:
 
     def checkRoundScores(self):
         pass
-
 
     def driver(self):
         # game loop

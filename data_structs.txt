@@ -5,7 +5,7 @@ player = {}
 	int score
 	card[] hand
 	bool ai
-	socketclient client
+	serverconn server
 
 pre_turn_data = {}
 	card[] hand
