@@ -113,7 +113,7 @@ class Game:
         pre_turn_data['roundover'] = False
         server.send_obj(pre_turn_data)
 
-        time.sleep(5)
+        time.sleep(3)
         
 
     # extremely basic ai which discards highest card and picks

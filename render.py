@@ -17,6 +17,7 @@ import sys
 # curses.echo()
 # curses.curs_set(1)
 # curses.endwin()
+logger = open("render.log", 'a')
 
 class RenderUI:
 	cur_card = 0
@@ -54,7 +55,7 @@ class RenderUI:
 
 	def _displaySelected(self, display):
 		x_coord = self.card_width/2 + self.cur_card*self.card_width
-		# print x_coord
+		logger.write(str(self.cur_card) + " " + str(x_coord) + "\n")
 		if display:
 			self.select_win.addch(0, x_coord, 'X')
 		else:
@@ -62,6 +63,8 @@ class RenderUI:
 		self.select_win.refresh()
 
 	def _displayCards(self, cards, begin_y, begin_x):
+		self.cur_card = 0
+		self.pcards = []
 		for i,card in enumerate(cards):
 			pcard = {}
 			if card[0] == 'T':
@@ -74,11 +77,8 @@ class RenderUI:
 			pcard['selected'] = False
 			self.pcards.append(pcard)
 
-		# print self.pcards
 		for pcard in self.pcards:
 			self._displayCard(pcard, False)
-		# Set first card to bold
-		self._displayCard(self.pcards[self.cur_card], True)
 
 	def _displayCard(self, pcard, bold):
 		win = pcard['window']
@@ -146,7 +146,6 @@ class RenderUI:
 		for pcard in self.pcards:
 			pcard['window'].erase()
 			pcard['window'].refresh()
-		self.pcards = []
 
 	def renderDiscards(self, cards):
 		self._displayCards(cards, self.discard_begin_y, self.discard_begin_x)
@@ -158,7 +157,6 @@ class RenderUI:
 		return curses.wrapper(self._chooseHandHelper, hand)
 
 	def _chooseHandHelper(self, stdscr, hand):
-		self.cur_card = 0
 		curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
 		stdscr.bkgd(' ', curses.color_pair(1))
 		stdscr.clear()
@@ -171,6 +169,8 @@ class RenderUI:
 		self.select_win.bkgd(' ', curses.color_pair(1))
 
 		self._displayCards(hand, self.hand_begin_y, self.hand_begin_x)
+		# Set first card to bold
+		self._displayCard(self.pcards[self.cur_card], True)
 		
 		while 1:
 			c = stdscr.getch()
