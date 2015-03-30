@@ -7,7 +7,8 @@ import jsocket
 import sys
 import json
 
-port = 50000 
+port = 50000
+num_players = 0
 
 client = jsocket.JsonClient(port=50000)
 client.connect()
@@ -17,9 +18,17 @@ client.send_obj({'name':name})
 name_data = client.read_obj()
 if name_data['name'] == name:
 	print "Successfully joined"
+game_data = client.read_obj()
+num_players = game_data['num_players']
 
 ui = RenderUI()
 while 1:
+	# receive updates from server
+	player = client.read_obj()
+	ui.renderUpdate(player)
+	if player['name'] != name:
+		continue
+
 	pre_turn_data = client.read_obj()
 	# check if round/game ended
 	if pre_turn_data['roundover']:

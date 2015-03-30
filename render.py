@@ -159,6 +159,10 @@ class RenderUI:
 			pcard['window'].erase()
 			pcard['window'].refresh()
 
+	def renderUpdate(self, player):
+		logger.write(str(player) + "\n")
+		logger.flush()
+
 	def renderDiscards(self, cards):
 		self._displayCards(cards, self.discard_begin_y, self.discard_begin_x)
 

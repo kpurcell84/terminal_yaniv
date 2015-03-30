@@ -1,10 +1,12 @@
 card = [val, suit, sort_val]
 
 player = {}
+	int pid
 	str name
 	int score
 	card[] hand
 	bool ai
+	bool is_turn
 	serverconn server
 
 pre_turn_data = {}
@@ -17,3 +19,7 @@ post_turn_data = {}
 	card[] discards
 	bool deck_draw
 	bool yaniv
+
+game_data = {}
+	int num_players
+

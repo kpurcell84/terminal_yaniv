@@ -13,14 +13,13 @@ class Game:
     deck = None
     yaniv = False
     yaniv_pid = -1
+    players = []
 
     def __init__(self):
-        self.players = self.getPlayers()
+        self.getPlayers()
         self.driver()
 
-    def getPlayers(self):
-        players = []
-      
+    def getPlayers(self): 
         host = '' 
         port = 50000 
         backlog = 5
@@ -34,12 +33,14 @@ class Game:
             if name_data:
                 print name_data['name'] + " has joined" 
                 player = {}
+                player['pid'] = 0
                 player['name'] = name_data['name']
                 player['score'] = 0
                 player['hand'] = []
                 player['ai'] = False
+                player['is_turn'] = False
                 player['server'] = server
-                players.append(player)
+                self.players.append(player)
                 # respond to client with name
                 time.sleep(1)
                 server.send_obj(name_data)
@@ -48,12 +49,19 @@ class Game:
         # hardcoded ai players
         for i in range(1,4):
             player = {}
+            player['pid'] = i
             player['name'] = "Player " + str(i)
             player['score'] = 0
             player['hand'] = []
             player['ai'] = True
-            players.append(player)
-        return players
+            player['is_turn'] = False
+            self.players.append(player)
+
+        # send game initialization data over
+        game_data = {'num_players':len(self.players)}
+        for player in self.players:
+            if not player['ai']:
+                player['server'].send_obj(game_data)
 
     def checkWin(self):
         for player in self.players:
@@ -112,13 +120,14 @@ class Game:
         pre_turn_data['gameover'] = False
         pre_turn_data['roundover'] = False
         server.send_obj(pre_turn_data)
-
-        time.sleep(3)
         
 
     # extremely basic ai which discards highest card and picks
     # up from the deck
     def aiTurn(self, pid):
+        # thinking.....
+        time.sleep(2)
+
         # discard highest card
         dcards = []
         high_card = self.players[pid]['hand'].pop(0)
@@ -129,7 +138,17 @@ class Game:
         new_card = self.deck.drawCard()
         self.insertCard(pid, new_card)
 
-    def checkRoundScores(self):
+    # update all the human players as to what's going on
+    def sendUpdate(self, cur_player):
+        # make a deep copy and remove connection info before serializing
+        cur_player_copy = cur_player.copy()
+        cur_player_copy.pop('server', None)
+        for player in self.players:
+            if not player['ai']:
+                player['server'].send_obj(cur_player_copy)
+
+    # add round scores to players totals
+    def addRoundScores(self):
         pass
 
     def driver(self):
@@ -148,17 +167,23 @@ class Game:
             # round loop
             while 1:
                 for pid,player in enumerate(self.players):
+                    player['is_turn'] = True
+                    self.sendUpdate(player)
+                    
                     if player['ai']:
                         self.aiTurn(pid)
                     else:
                         self.humanTurn(pid)
+
+                    player['is_turn'] = False
+                    
                     if self.yaniv:
-                        break
+                        break      
                 print "players:"
                 print self.players
                 print ""
             break
-            self.checkRoundScores()
+            self.addRoundScores()
 
 
 if __name__=='__main__':
