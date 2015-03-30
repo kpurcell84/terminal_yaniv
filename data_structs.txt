@@ -9,7 +9,7 @@ player = {}
 
 pre_turn_data = {}
 	card[] hand
-	card discard_top
+	card[] last_discards
 	bool roundover
 	bool gameover
 

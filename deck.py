@@ -7,6 +7,7 @@ class Deck:
 	def __init__(self):
 		self.cards = []
 		self.discards = []
+		self.last_discard_num = 1
 
 		vals = 'A23456789TJQK'
 		suits = 'cdhs'
@@ -62,8 +63,7 @@ class Deck:
 	def discardCards(self, dcards):
 		for dcard in dcards:
 			self.discards.insert(0, dcard)
+		self.last_discard_num = len(dcards)
 
-
-# deck = Deck()
-# hand = deck.drawCards(5)
-# print hand
+	def getLastDiscards(self):
+		return self.discards[0:self.last_discard_num]

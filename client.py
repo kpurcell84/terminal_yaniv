@@ -27,13 +27,14 @@ while 1:
 		if pre_turn_data['gameover']:
 			break
 	
-	print "pre_turn_data['hand']:"
-	print pre_turn_data['hand']
-	print ""
+	# print "pre_turn_data['hand']:"
+	# print pre_turn_data['hand']
+	# print ""
+	ui.renderDiscards(pre_turn_data['last_discards'])
 	discards = ui.chooseHand(pre_turn_data['hand'])
-	print "discards:"
-	print discards
-	print ""
+	# print "discards:"
+	# print discards
+	# print ""
 
 	post_turn_data = {}
 	post_turn_data['discards'] = discards
@@ -44,3 +45,4 @@ while 1:
 	# receive updated data and display
 	pre_turn_data = client.read_obj()
 	ui.renderHand(pre_turn_data['hand'])
+	ui.renderDiscards(pre_turn_data['last_discards'])

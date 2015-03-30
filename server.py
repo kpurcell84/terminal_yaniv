@@ -72,7 +72,7 @@ class Game:
         # send pre turn data to client
         pre_turn_data = {}
         pre_turn_data['hand'] = self.players[pid]['hand']
-        pre_turn_data['discard_top'] = self.deck.discards[0]
+        pre_turn_data['last_discards'] = self.deck.getLastDiscards()
         pre_turn_data['gameover'] = False
         pre_turn_data['roundover'] = False
         print "pre_turn_data:"
@@ -108,7 +108,7 @@ class Game:
         # send client back new hand
         pre_turn_data = {}
         pre_turn_data['hand'] = self.players[pid]['hand']
-        pre_turn_data['discard_top'] = self.deck.discards[0]
+        pre_turn_data['last_discards'] = self.deck.getLastDiscards()
         pre_turn_data['gameover'] = False
         pre_turn_data['roundover'] = False
         server.send_obj(pre_turn_data)

@@ -33,7 +33,19 @@ class RenderUI:
 	hand = None
 
 	def __init__(self):
-		pass
+		return curses.wrapper(self.__init__helper)
+
+	def __init__helper(self, stdscr):
+		curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+		stdscr.bkgd(' ', curses.color_pair(1))
+		stdscr.clear()
+		curses.curs_set(0)
+		stdscr.refresh()
+		self.stdscr = stdscr
+
+		# build window beneath hand for card selection
+		self.select_win = curses.newwin(1, (self.card_width+1)*5, self.hand_begin_y + self.card_height, self.hand_begin_x)
+		self.select_win.bkgd(' ', curses.color_pair(1))
 
 	def _nextCard(self):
 		# unbold cur_card
@@ -157,16 +169,6 @@ class RenderUI:
 		return curses.wrapper(self._chooseHandHelper, hand)
 
 	def _chooseHandHelper(self, stdscr, hand):
-		curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
-		stdscr.bkgd(' ', curses.color_pair(1))
-		stdscr.clear()
-		curses.curs_set(0)
-		stdscr.refresh()
-		self.stdscr = stdscr
-
-		# build window beneath hand for card selection
-		self.select_win = curses.newwin(1, (self.card_width+1)*5, self.hand_begin_y + self.card_height, self.hand_begin_x)
-		self.select_win.bkgd(' ', curses.color_pair(1))
 
 		self._displayCards(hand, self.hand_begin_y, self.hand_begin_x)
 		# Set first card to bold
