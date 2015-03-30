@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import logger
+
 import curses
 import time
 import sys
