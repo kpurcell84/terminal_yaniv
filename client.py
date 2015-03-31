@@ -14,7 +14,7 @@ num_players = 0
 client = jsocket.JsonClient(port=50000)
 client.connect()
 
-name = raw_input("Enter your name: ")
+name = raw_input("Enter your initials: ")
 client.send_obj({'name':name})
 name_data = client.read_obj()
 if name_data['name'] == name:
