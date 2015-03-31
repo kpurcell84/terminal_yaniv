@@ -31,22 +31,33 @@ class Game:
         print "Waiting for players..."
         while 1: 
             server.accept_connection()
-            name_data = server.read_obj()
-            if name_data:
-                print name_data['name'] + " has joined" 
-                player = {}
-                player['pid'] = 0
-                player['name'] = name_data['name']
-                player['score'] = 0
-                player['hand'] = []
-                player['ai'] = False
-                player['is_turn'] = False
-                player['server'] = server
-                self.players.append(player)
-                # respond to client with name
-                time.sleep(1)
-                server.send_obj(name_data)
-                break
+            while 1:
+                name_data = server.read_obj()
+                name_valid = True
+                for player in self.players:
+                    if player['name'] == name_data['name']:
+                        name_valid = False
+                        break
+                if name_valid:
+                    break
+                else:
+                    print "Repeat name"
+                    server.send_obj({'name':"Repeat"})
+
+            print name_data['name'] + " has joined" 
+            player = {}
+            player['pid'] = 0
+            player['name'] = name_data['name']
+            player['score'] = 0
+            player['hand'] = []
+            player['ai'] = False
+            player['is_turn'] = False
+            player['server'] = server
+            self.players.append(player)
+            # respond to client with name
+            time.sleep(1)
+            server.send_obj(name_data)
+            break
 
         # hardcoded ai players
         for i in range(1,4):

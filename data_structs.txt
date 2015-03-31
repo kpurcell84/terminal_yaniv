@@ -19,11 +19,14 @@ post_turn_data = {}
 	card[] discards
 	int pick_up_idx
 	bool yaniv
-	
+
 update_data = {}
 	player player
 	card[] last_discards
 
 game_data = {}
 	int num_players
+
+name_data = {}
+	string name
 

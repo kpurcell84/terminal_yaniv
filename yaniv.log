@@ -251,3 +251,19 @@
 
 [Tue 03/31/2015 12:51:07] [{'name': u'KP', 'ai': False, 'pid': 0, 'hand': [['9', 'c', 9], ['7', 's', 7], ['5', 's', 5], ['3', 's', 3], ['2', 'c', 2]], 'score': 0, 'is_turn': False, 'server': <jsocket.jsocket_base.JsonServer object at 0x7fb74b241e90>}, {'name': 'Player 1', 'ai': True, 'pid': 1, 'hand': [['K', 'c', 13], ['Q', 's', 12], ['2', 's', 2], ['A', 'c', 1], ['A', 'h', 1]], 'score': 0, 'is_turn': False}, {'name': 'Player 2', 'ai': True, 'pid': 2, 'hand': [['K', 'd', 13], ['Q', 'd', 12], ['J', 's', 11], ['5', 'd', 5], ['4', 'c', 4]], 'score': 0, 'is_turn': False}, {'name': 'Player 3', 'ai': True, 'pid': 3, 'hand': [['J', 'd', 11], ['T', 'd', 10], ['T', 'c', 10], ['8', 'c', 8], ['4', 's', 4]], 'score': 0, 'is_turn': False}]
 
+[Tue 03/31/2015 12:53:50] Players initialized
+
+[Tue 03/31/2015 12:53:50] [{'name': u'kjp', 'ai': False, 'pid': 0, 'hand': [['9', 'c', 9], ['8', 's', 8], ['8', 'd', 8], ['7', 'c', 7], ['4', 's', 4]], 'score': 0, 'is_turn': False, 'server': <jsocket.jsocket_base.JsonServer object at 0x7f781917be90>}, {'name': 'Player 1', 'ai': True, 'pid': 1, 'hand': [['Q', 'h', 12], ['9', 'h', 9], ['7', 's', 7], ['4', 'd', 4], ['3', 'd', 3]], 'score': 0, 'is_turn': False}, {'name': 'Player 2', 'ai': True, 'pid': 2, 'hand': [['J', 's', 11], ['J', 'h', 11], ['9', 'd', 9], ['6', 's', 6], ['5', 'c', 5]], 'score': 0, 'is_turn': False}, {'name': 'Player 3', 'ai': True, 'pid': 3, 'hand': [['T', 'h', 10], ['T', 'c', 10], ['7', 'd', 7], ['7', 'h', 7], ['3', 'c', 3]], 'score': 0, 'is_turn': False}]
+
+[Tue 03/31/2015 12:59:39] Players initialized
+
+[Tue 03/31/2015 12:59:39] [{'name': u'', 'ai': False, 'pid': 0, 'hand': [['Q', 'd', 12], ['Q', 'h', 12], ['8', 'd', 8], ['3', 'c', 3], ['A', 'd', 1]], 'score': 0, 'is_turn': False, 'server': <jsocket.jsocket_base.JsonServer object at 0x7f73a36fae90>}, {'name': 'Player 1', 'ai': True, 'pid': 1, 'hand': [['Q', 'c', 12], ['5', 'c', 5], ['5', 'd', 5], ['4', 'c', 4], ['2', 'h', 2]], 'score': 0, 'is_turn': False}, {'name': 'Player 2', 'ai': True, 'pid': 2, 'hand': [['J', 'h', 11], ['T', 'd', 10], ['T', 'c', 10], ['6', 'c', 6], ['4', 'd', 4]], 'score': 0, 'is_turn': False}, {'name': 'Player 3', 'ai': True, 'pid': 3, 'hand': [['9', 'c', 9], ['9', 'h', 9], ['8', 'h', 8], ['3', 'h', 3], ['2', 'd', 2]], 'score': 0, 'is_turn': False}]
+
+[Tue 03/31/2015 13:04:31] Players initialized
+
+[Tue 03/31/2015 13:04:31] [{'name': u'KP', 'ai': False, 'pid': 0, 'hand': [['K', 'c', 13], ['9', 'c', 9], ['8', 'c', 8], ['5', 'd', 5], ['3', 'c', 3]], 'score': 0, 'is_turn': False, 'server': <jsocket.jsocket_base.JsonServer object at 0x7fce3d9d5e90>}, {'name': 'Player 1', 'ai': True, 'pid': 1, 'hand': [['Q', 's', 12], ['7', 'c', 7], ['6', 'd', 6], ['5', 's', 5], ['4', 'c', 4]], 'score': 0, 'is_turn': False}, {'name': 'Player 2', 'ai': True, 'pid': 2, 'hand': [['K', 'd', 13], ['J', 'h', 11], ['T', 'c', 10], ['T', 's', 10], ['9', 's', 9]], 'score': 0, 'is_turn': False}, {'name': 'Player 3', 'ai': True, 'pid': 3, 'hand': [['Q', 'h', 12], ['4', 'h', 4], ['4', 's', 4], ['A', 's', 1], ['A', 'c', 1]], 'score': 0, 'is_turn': False}]
+
+[Tue 03/31/2015 13:10:24] Players initialized
+
+[Tue 03/31/2015 13:10:24] [{'name': u'KJP', 'ai': False, 'pid': 0, 'hand': [['9', 'c', 9], ['4', 's', 4], ['3', 'h', 3], ['2', 's', 2], ['A', 's', 1]], 'score': 0, 'is_turn': False, 'server': <jsocket.jsocket_base.JsonServer object at 0x7f8ac48d2e90>}, {'name': 'Player 1', 'ai': True, 'pid': 1, 'hand': [['J', 'c', 11], ['T', 'c', 10], ['4', 'c', 4], ['A', 'c', 1], ['A', 'd', 1]], 'score': 0, 'is_turn': False}, {'name': 'Player 2', 'ai': True, 'pid': 2, 'hand': [['T', 'h', 10], ['7', 'c', 7], ['5', 's', 5], ['4', 'd', 4], ['4', 'h', 4]], 'score': 0, 'is_turn': False}, {'name': 'Player 3', 'ai': True, 'pid': 3, 'hand': [['K', 'h', 13], ['J', 's', 11], ['9', 'h', 9], ['6', 'h', 6], ['6', 'c', 6]], 'score': 0, 'is_turn': False}]
+

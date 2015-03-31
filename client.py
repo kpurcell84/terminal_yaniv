@@ -14,11 +14,21 @@ num_players = 0
 client = jsocket.JsonClient(port=50000)
 client.connect()
 
-name = raw_input("Enter your initials: ")
-client.send_obj({'name':name})
-name_data = client.read_obj()
-if name_data['name'] == name:
-	print "Successfully joined"
+while 1:
+	name = raw_input("Enter your initials: ")
+	while len(name) > 3 or len(name) == 0:
+		print "Please enter 1-3 letters"
+		name = raw_input("Enter your initials: ")
+
+	client.send_obj({'name':name})
+	name_data = client.read_obj()
+	if name_data['name'] == name:
+		print "Successfully joined"
+		break
+	else:
+		print "Those initials are already in use"
+
+print "Waiting for other players..."
 game_data = client.read_obj()
 num_players = game_data['num_players']
 

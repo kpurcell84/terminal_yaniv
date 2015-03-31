@@ -131,7 +131,7 @@ class RenderUI:
 				self.select_win2.addch(0, x_coord, 'X')
 				self.select_win2.refresh()
 			else:
-				self.select_win1.addch(0, x_coord, 'X')
+				self.select_win1.addch(0, x_coord, '*')
 				self.select_win1.refresh()
 		else:
 			if is_hand:
