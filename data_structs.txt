@@ -17,8 +17,12 @@ pre_turn_data = {}
 
 post_turn_data = {}
 	card[] discards
-	bool deck_draw
+	int pick_up_idx
 	bool yaniv
+	
+update_data = {}
+	player player
+	card[] last_discards
 
 game_data = {}
 	int num_players

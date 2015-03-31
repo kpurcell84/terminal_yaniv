@@ -1,6 +1,7 @@
 #!/usr/bin/env python 
 
 from render import RenderUI
+import logger
 
 import socket
 import jsocket
@@ -24,9 +25,9 @@ num_players = game_data['num_players']
 ui = RenderUI()
 while 1:
 	# receive updates from server
-	player = client.read_obj()
-	ui.renderUpdate(player)
-	if player['name'] != name:
+	update_data = client.read_obj()
+	ui.renderUpdate(update_data)
+	if update_data['player']['name'] != name:
 		continue
 
 	pre_turn_data = client.read_obj()
@@ -36,18 +37,14 @@ while 1:
 		if pre_turn_data['gameover']:
 			break
 	
-	# print "pre_turn_data['hand']:"
-	# print pre_turn_data['hand']
-	# print ""
 	ui.renderDiscards(pre_turn_data['last_discards'])
 	discards = ui.chooseHand(pre_turn_data['hand'])
-	# print "discards:"
-	# print discards
-	# print ""
+	ui.renderHand(pre_turn_data['hand'])
+	cur_card = ui.chooseDiscards(pre_turn_data['last_discards'])
 
 	post_turn_data = {}
+	post_turn_data['pick_up_idx'] = cur_card
 	post_turn_data['discards'] = discards
-	post_turn_data['deck_draw'] = True
 	post_turn_data['yaniv'] = False
 	client.send_obj(post_turn_data)
 

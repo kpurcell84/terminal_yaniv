@@ -5,6 +5,6 @@ import time
 def write(message):
 	now = time.strftime("%a %m/%d/%Y %H:%M:%S") 
 	log = open("yaniv.log", 'a')
-	log.write("["+now+"] "+str(message)+"\n")
+	log.write("["+now+"] "+str(message)+"\n\n")
 	log.flush()
 	log.close()

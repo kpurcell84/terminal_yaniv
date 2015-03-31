@@ -56,9 +56,8 @@ class Deck:
 		card = self.cards.pop(0)
 		return card
 
-	def drawDiscard(self):
-		card = self.discards.pop(0)
-		return card
+	def drawDiscard(self, pick_up_idx):
+		return self.discards.pop(pick_up_idx-1)
 
 	def discardCards(self, dcards):
 		for dcard in dcards:

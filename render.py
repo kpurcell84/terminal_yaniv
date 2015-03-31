@@ -19,21 +19,27 @@ import sys
 # curses.echo()
 # curses.curs_set(1)
 # curses.endwin()
-logger = open("render.log", 'a')
 
 class RenderUI:
 	cur_card = 0
-	hand_begin_x = 5
-	hand_begin_y = 14
+	left_margin = 5
+	top_margin = 1
 	card_height = 7
 	card_width = 9
-	discard_begin_x = 5
-	discard_begin_y = 5
+	stats_height = 3
+	stats_width = 40
+	message_height = 4
+	message_width = 40
 	pcards = []
-	select_win = None
 	stdscr = None
 	hand = None
-
+	# windows
+	stats_win = None
+	discard_win = None
+	hand_win = None
+	select_win = None
+	message_win = None
+	
 	def __init__(self):
 		return curses.wrapper(self.__init__helper)
 
@@ -45,9 +51,44 @@ class RenderUI:
 		stdscr.refresh()
 		self.stdscr = stdscr
 
-		# build window beneath hand for card selection
-		self.select_win = curses.newwin(1, (self.card_width+1)*5, self.hand_begin_y + self.card_height, self.hand_begin_x)
+		# build windows from top down
+		self.stats_win = curses.newwin(self.stats_height, self.stats_width, self.top_margin, self.left_margin)
+
+		discard_begin_x = self.left_margin
+		discard_begin_y = self.stats_win.getbegyx()[0] + self.stats_height + 1
+		self.discard_win = curses.newwin(self.card_height, (self.card_width+1)*6, discard_begin_y, discard_begin_x)
+
+		hand_begin_x = self.left_margin
+		hand_begin_y = self.discard_win.getbegyx()[0] + self.card_height + 1
+		self.hand_win = curses.newwin(self.card_height, (self.card_width+1)*5, hand_begin_y, hand_begin_x)
+
+		select_begin_x = self.left_margin
+		select_begin_y = self.hand_win.getbegyx()[0] + self.card_height
+		self.select_win = curses.newwin(1, (self.card_width+1)*5, select_begin_y, select_begin_x)
+
+		message_begin_x = self.left_margin
+		message_begin_y = self.select_win.getbegyx()[0] + 2
+		self.message_win = curses.newwin(self.message_height, self.message_width, message_begin_y, message_begin_x)
+
+		self.stats_win.bkgd(' ', curses.color_pair(1))
+		self.discard_win.bkgd(' ', curses.color_pair(1))
+		self.hand_win.bkgd(' ', curses.color_pair(1))
 		self.select_win.bkgd(' ', curses.color_pair(1))
+		self.message_win.bkgd(' ', curses.color_pair(1))
+
+		# self.stats_win.box()
+		# self.discard_win.box()
+		# self.hand_win.box()
+		# self.select_win.box()
+		# self.message_win.box()
+
+		# self.stats_win.refresh()
+		# self.discard_win.refresh()
+		# self.hand_win.refresh()
+		# self.select_win.refresh()
+		# self.message_win.refresh()
+
+		# time.sleep(5)
 
 	def _nextCard(self):
 		# unbold cur_card
@@ -69,14 +110,18 @@ class RenderUI:
 
 	def _displaySelected(self, display):
 		x_coord = self.card_width/2 + self.cur_card*self.card_width
-		logger.write(str(self.cur_card) + " " + str(x_coord) + "\n")
 		if display:
 			self.select_win.addch(0, x_coord, 'X')
 		else:
 			self.select_win.addch(0, x_coord, ' ')
 		self.select_win.refresh()
 
-	def _displayCards(self, cards, begin_y, begin_x):
+	def _displayCards(self, cards, is_hand):
+		self._eraseCards(is_hand)
+		if not is_hand and cards[0][0] != "D":
+				# insert face down deck card for display purposes
+				cards.insert(0, ["D", "D", 0])
+
 		self.cur_card = 0
 		self.pcards = []
 		for i,card in enumerate(cards):
@@ -86,8 +131,11 @@ class RenderUI:
 			else:
 				pcard['val'] = card[0]
 			pcard['suit'] = card[1]
-			pcard['window'] = curses.newwin(self.card_height, self.card_width, begin_y, begin_x+(i*self.card_width))
-			pcard['window'].bkgd(' ', curses.color_pair(1))
+			if is_hand:
+				pcard['window'] = self.hand_win.derwin(self.card_height, self.card_width, 0, i*self.card_width)
+			else:
+				pcard['window'] = self.discard_win.derwin(self.card_height, self.card_width, 0, i*self.card_width)
+			# pcard['window'].bkgd(' ', curses.color_pair(1))
 			pcard['selected'] = False
 			self.pcards.append(pcard)
 
@@ -96,8 +144,24 @@ class RenderUI:
 
 	def _displayCard(self, pcard, bold):
 		win = pcard['window']
+		# face down deck card
+		if pcard['suit'] == "D":
+			if bold:
+				win.addstr(1,1,"*******", curses.A_BOLD)
+				win.addstr(2,1,"*******", curses.A_BOLD)
+				win.addstr(3,1,"*******", curses.A_BOLD)
+				win.addstr(4,1,"*******", curses.A_BOLD)
+				win.addstr(5,1,"*******", curses.A_BOLD)
+				win.addstr(6,1,"*******", curses.A_BOLD)
+			else:
+				win.addstr(1,1,"*******")
+				win.addstr(2,1,"*******")
+				win.addstr(3,1,"*******")
+				win.addstr(4,1,"*******")
+				win.addstr(5,1,"*******")
+				win.addstr(6,1,"*******")
 		# diamonds
-		if pcard['suit'] == "d":
+		elif pcard['suit'] == "d":
 			if bold:
 				win.addstr(1,1,"   /\\", curses.A_BOLD)
 				win.addstr(2,1,"  /  \\", curses.A_BOLD)
@@ -144,39 +208,49 @@ class RenderUI:
 				win.addstr(2,1,"  / \\")
 				win.addstr(3,1," (_._)")
 				win.addstr(4,1,"   |")
-		if bold:
-			win.addstr(1,1, pcard['val'], curses.A_UNDERLINE)
-			win.addstr(5,6, pcard['val'], curses.A_UNDERLINE)
-		else:
-			win.addstr(1,1, pcard['val'])
-			win.addstr(5,6, pcard['val'])
+		# insert values into corners if not a face down deck card
+		if pcard['suit'] != "D":
+			if bold:
+				win.addstr(1,1, pcard['val'], curses.A_UNDERLINE)
+				win.addstr(5,6, pcard['val'], curses.A_UNDERLINE)
+			else:
+				win.addstr(1,1, pcard['val'])
+				win.addstr(5,6, pcard['val'])
 
 		win.box()
 		win.refresh()
 
-	def _eraseCards(self):
-		self.select_win.erase()
-		self.select_win.refresh()
-		for pcard in self.pcards:
-			pcard['window'].erase()
-			pcard['window'].refresh()
-
-	def renderUpdate(self, player):
-		logger.write(str(player) + "\n")
-		logger.flush()
+	def _eraseCards(self, is_hand):
+		if is_hand:
+			self.hand_win.erase()
+			self.select_win.erase()
+			self.hand_win.refresh()
+			self.select_win.refresh()
+		else:
+			self.discard_win.erase()
+			self.discard_win.refresh()
+		
+	def renderUpdate(self, update_data):
+		self.renderDiscards(update_data['last_discards'])
 
 	def renderDiscards(self, cards):
-		self._displayCards(cards, self.discard_begin_y, self.discard_begin_x)
+		self._displayCards(cards, False)
 
 	def renderHand(self, hand):
-		self._displayCards(hand, self.hand_begin_y, self.hand_begin_x)
+		self._displayCards(hand, True)
 
-	def chooseHand(self, hand):
-		return curses.wrapper(self._chooseHandHelper, hand)
+	def chooseHand(self, cards):
+		return curses.wrapper(self._chooseCardsHelper, cards, True)
 
-	def _chooseHandHelper(self, stdscr, hand):
+	def chooseDiscards(self, cards):
+		return curses.wrapper(self._chooseCardsHelper, cards, False)
 
-		self._displayCards(hand, self.hand_begin_y, self.hand_begin_x)
+	# if is_hand == True (player is selecting cards to put down)
+	# 	returns list of selected cards
+	# else (player is selecting discard to pick up)
+	#	returns cur_card
+	def _chooseCardsHelper(self, stdscr, cards, is_hand):
+		self._displayCards(cards, is_hand)
 		# Set first card to bold
 		self._displayCard(self.pcards[self.cur_card], True)
 		
@@ -188,7 +262,7 @@ class RenderUI:
 				self._nextCard()
 			elif c == curses.KEY_LEFT:
 				self._prevCard()
-			elif c == 32: # space key
+			elif c == 32 and is_hand: # space key
 				if self.pcards[self.cur_card]['selected']:
 					self.pcards[self.cur_card]['selected'] = False
 					self._displaySelected(False)
@@ -196,25 +270,27 @@ class RenderUI:
 					self.pcards[self.cur_card]['selected'] = True
 					self._displaySelected(True)
 			elif c == 10: # enter key
-				selected_cards = []
-				selected_val = ""
-				valid = True
-				# add cids of selected cards to a list
-				for cid,pcard in enumerate(self.pcards):
-					if pcard['selected']:
-						selected_cards.append(hand[cid])
-						# check to make sure they're all the same value
-						if selected_val == "":
-							selected_val = pcard['val']
-						elif pcard['val'] != selected_val:
-							valid = False
-							break
-				if valid and selected_cards:
-					self._eraseCards()
-					return selected_cards
+				if is_hand:
+					selected_cards = []
+					selected_val = ""
+					valid = True
+					# add cids of selected cards to a list
+					for cid,pcard in enumerate(self.pcards):
+						if pcard['selected']:
+							selected_cards.append(cards[cid])
+							# check to make sure they're all the same value
+							if selected_val == "":
+								selected_val = pcard['val']
+							elif pcard['val'] != selected_val:
+								valid = False
+								break
+					if valid and selected_cards:
+						self._eraseCards(is_hand)
+						return selected_cards
+					else:
+						# TODO display error message
+						continue
+				# case for when player is selecting discard
 				else:
-					# TODO display error message
-					continue
-	
-if __name__=='__main__':
-    RenderCards()
+					self._eraseCards(is_hand)
+					return self.cur_card

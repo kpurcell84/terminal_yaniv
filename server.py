@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from deck import Deck
+import logger
 
 import socket
 import jsocket
@@ -17,6 +18,7 @@ class Game:
 
     def __init__(self):
         self.getPlayers()
+        logger.write("Players initialized")
         self.driver()
 
     def getPlayers(self): 
@@ -101,11 +103,11 @@ class Game:
  
         new_card = None
         # if chosen, draw card from deck
-        if post_turn_data['deck_draw']:
+        if post_turn_data['pick_up_idx'] == 0:
             new_card = self.deck.drawCard()
         # else draw top discard card
         else:
-            new_card = self.deck.drawDiscard()
+            new_card = self.deck.drawDiscard(post_turn_data['pick_up_idx'])
         self.insertCard(pid, new_card)
 
         # get rid of client's discards
@@ -140,12 +142,15 @@ class Game:
 
     # update all the human players as to what's going on
     def sendUpdate(self, cur_player):
+        update_data = {}
         # make a deep copy and remove connection info before serializing
         cur_player_copy = cur_player.copy()
         cur_player_copy.pop('server', None)
+        update_data['player'] = cur_player_copy
+        update_data['last_discards'] = self.deck.getLastDiscards()
         for player in self.players:
             if not player['ai']:
-                player['server'].send_obj(cur_player_copy)
+                player['server'].send_obj(update_data)
 
     # add round scores to players totals
     def addRoundScores(self):
@@ -161,8 +166,7 @@ class Game:
                 for i in range(5):
                     dealt_card = self.deck.drawCard()
                     self.insertCard(pid, dealt_card)
-            print self.players
-            print ""
+            logger.write(self.players)
             # break
             # round loop
             while 1:
