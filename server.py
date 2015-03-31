@@ -63,7 +63,7 @@ class Game:
         for i in range(1,4):
             player = {}
             player['pid'] = i
-            player['name'] = "Player " + str(i)
+            player['name'] = "ai" + str(i)
             player['score'] = 0
             player['hand'] = []
             player['ai'] = True

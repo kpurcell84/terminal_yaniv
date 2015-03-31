@@ -23,18 +23,18 @@ import sys
 class RenderUI:
 	cur_card = 0
 	left_margin = 5
-	top_margin = 1
+	top_margin = 0
 	card_height = 7
 	card_width = 9
-	stats_height = 4
-	stats_width = 40
+	stats_height = 6
+	stats_width = 50
 	message_height = 4
-	message_width = 40
-	rstats = []
+	message_width = 50
 	rcards = []
 	stdscr = None
 	hand = None
 	# windows
+	stats_outer_win = None
 	stats_win = None
 	discard_win = None
 	hand_win = None
@@ -54,10 +54,19 @@ class RenderUI:
 		self.stdscr = stdscr
 
 		# build windows from top down
-		self.stats_win = curses.newwin(self.stats_height, self.stats_width, self.top_margin, self.left_margin)
+		self.stats_outer_win = curses.newwin(self.stats_height, self.stats_width, self.top_margin, self.left_margin)
+		self.stats_outer_win.box()
+		self.stats_outer_win.bkgd(' ', curses.color_pair(1))
+		self.stats_outer_win.addstr(1, 1, "Name  |")
+		self.stats_outer_win.addstr(2, 1, "Cards |")
+		self.stats_outer_win.addstr(3, 1, "Points|")
+		self.stats_outer_win.addstr(4, 1, "Turn  |")
+		self.stats_outer_win.refresh()
+
+		self.stats_win = self.stats_outer_win.derwin(self.stats_height-2, self.stats_width-11, 1, 9)
 
 		discard_begin_x = self.left_margin
-		discard_begin_y = self.stats_win.getbegyx()[0] + self.stats_height + 1
+		discard_begin_y = self.stats_win.getbegyx()[0] + self.stats_height
 		self.discard_win = curses.newwin(self.card_height, (self.card_width+1)*6, discard_begin_y, discard_begin_x)
 
 		select1_begin_x = self.left_margin
@@ -249,6 +258,16 @@ class RenderUI:
 	def _displayStats(self, players, cur_pid):
 		logger.write(cur_pid)
 		logger.write(players)
+
+		self.stats_win.erase()
+
+		for pid,player in enumerate(players):
+			self.stats_win.addstr(0, pid*5, str(player['name']))
+			self.stats_win.addstr(1, pid*5, str(len(player['hand'])))
+			self.stats_win.addstr(2, pid*5, str(player['score']))
+		self.stats_win.addstr(3, cur_pid*5, "#")
+
+		self.stats_win.refresh()
 
 	def _eraseCards(self, is_hand):
 		if is_hand:
