@@ -37,7 +37,8 @@ while 1:
 	# receive updates from server
 	update_data = client.read_obj()
 	ui.renderUpdate(update_data)
-	if update_data['player']['name'] != name:
+	cur_pid = update_data['cur_pid']
+	if update_data['players'][cur_pid]['name'] != name:
 		continue
 
 	pre_turn_data = client.read_obj()

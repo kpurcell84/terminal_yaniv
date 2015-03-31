@@ -6,7 +6,6 @@ player = {}
 	int score
 	card[] hand
 	bool ai
-	bool is_turn
 	serverconn server
 
 pre_turn_data = {}
@@ -21,7 +20,8 @@ post_turn_data = {}
 	bool yaniv
 
 update_data = {}
-	player player
+	player[] players
+	int cur_pid
 	card[] last_discards
 
 game_data = {}

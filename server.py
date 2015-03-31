@@ -8,6 +8,7 @@ import jsocket
 import sys
 import time
 import json
+from copy import deepcopy
 
 class Game:
     score_max = 200
@@ -51,7 +52,6 @@ class Game:
             player['score'] = 0
             player['hand'] = []
             player['ai'] = False
-            player['is_turn'] = False
             player['server'] = server
             self.players.append(player)
             # respond to client with name
@@ -67,7 +67,6 @@ class Game:
             player['score'] = 0
             player['hand'] = []
             player['ai'] = True
-            player['is_turn'] = False
             self.players.append(player)
 
         # send game initialization data over
@@ -152,13 +151,17 @@ class Game:
         self.insertCard(pid, new_card)
 
     # update all the human players as to what's going on
-    def sendUpdate(self, cur_player):
+    def sendUpdate(self, pid):
         update_data = {}
+        update_data['cur_pid'] = pid
         # make a deep copy and remove connection info before serializing
-        cur_player_copy = cur_player.copy()
-        cur_player_copy.pop('server', None)
-        update_data['player'] = cur_player_copy
+        players_copy = deepcopy(self.players)
+        for player in players_copy:
+            player.pop('server', None)
+            
+        update_data['players'] = players_copy
         update_data['last_discards'] = self.deck.getLastDiscards()
+        # send out updates to everyone
         for player in self.players:
             if not player['ai']:
                 player['server'].send_obj(update_data)
@@ -182,15 +185,12 @@ class Game:
             # round loop
             while 1:
                 for pid,player in enumerate(self.players):
-                    player['is_turn'] = True
-                    self.sendUpdate(player)
+                    self.sendUpdate(pid)
                     
                     if player['ai']:
                         self.aiTurn(pid)
                     else:
                         self.humanTurn(pid)
-
-                    player['is_turn'] = False
                     
                     if self.yaniv:
                         break      

@@ -30,6 +30,7 @@ class RenderUI:
 	stats_width = 40
 	message_height = 4
 	message_width = 40
+	rstats = []
 	rcards = []
 	stdscr = None
 	hand = None
@@ -245,6 +246,10 @@ class RenderUI:
 		win.box()
 		win.refresh()
 
+	def _displayStats(self, players, cur_pid):
+		logger.write(cur_pid)
+		logger.write(players)
+
 	def _eraseCards(self, is_hand):
 		if is_hand:
 			self.hand_win.erase()
@@ -258,6 +263,7 @@ class RenderUI:
 			self.select_win1.refresh()
 		
 	def renderUpdate(self, update_data):
+		self._displayStats(update_data['players'], update_data['cur_pid'])
 		self.renderDiscards(update_data['last_discards'])
 
 	def renderDiscards(self, cards):
