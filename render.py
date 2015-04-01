@@ -33,6 +33,7 @@ class RenderUI:
 	rcards = []
 	stdscr = None
 	hand = None
+	suits = {'d':"Diamonds", 'h':"Hearts", 's':"Spades", 'c':"Clubs"}
 	# windows
 	stats_outer_win = None
 	stats_win = None
@@ -66,7 +67,7 @@ class RenderUI:
 		self.stats_win = self.stats_outer_win.derwin(self.stats_height-2, self.stats_width-11, 1, 9)
 
 		discard_begin_x = self.left_margin
-		discard_begin_y = self.stats_win.getbegyx()[0] + self.stats_height
+		discard_begin_y = self.stats_outer_win.getbegyx()[0] + self.stats_height
 		self.discard_win = curses.newwin(self.card_height, (self.card_width+1)*6, discard_begin_y, discard_begin_x)
 
 		select1_begin_x = self.left_margin
@@ -82,7 +83,7 @@ class RenderUI:
 		self.select_win2 = curses.newwin(1, (self.card_width+1)*5, select2_begin_y, select2_begin_x)
 
 		message_begin_x = self.left_margin
-		message_begin_y = self.select_win2.getbegyx()[0] + 2
+		message_begin_y = self.select_win2.getbegyx()[0] + 1
 		self.message_win = curses.newwin(self.message_height, self.message_width, message_begin_y, message_begin_x)
 
 		self.stats_win.bkgd(' ', curses.color_pair(1))
@@ -280,10 +281,46 @@ class RenderUI:
 			self.discard_win.refresh()
 			self.select_win1.erase()
 			self.select_win1.refresh()
-		
+	
+	# message that's rendered for every player's turn
+	def _displayTurnMessage(self, update_data):
+		message = ""
+		cur_pid = update_data['cur_pid']
+		cur_name = update_data['players'][cur_pid]['name']
+		if update_data['last_pick_up'] != None:
+			last_pid = cur_pid - 1
+			if last_pid < 0:
+				last_pid = len(update_data['players']) - 1
+			last_name = update_data['players'][last_pid]['name']
+			# render messsages about what's happening
+			message += last_name + " put down the "
+			for card in update_data['last_discards']:
+				# skip deck card
+				if card[0] == "D":
+					continue
+				message += "[" + card[0] + " of " + self.suits[card[1]] + "], "
+			# remove last comma and space
+			message = message[:-2]
+			message += "\n"
+			if update_data['last_pick_up'][0] == "D":
+				message += "and picked up a card from the deck"
+			else:
+				message += "and picked up the [" + update_data['last_pick_up'][0] + " of " + self.suits[update_data['last_pick_up'][1]] + "]"
+			message += "\n\n"
+
+		message += cur_name + "'s turn..."
+
+		self.renderMessage(message)
+
+	def renderMessage(self, message):
+		self.message_win.erase()
+		self.message_win.addstr(0, 0, str(message))
+		self.message_win.refresh()
+
 	def renderUpdate(self, update_data):
 		self._displayStats(update_data['players'], update_data['cur_pid'])
 		self.renderDiscards(update_data['last_discards'])
+		self._displayTurnMessage(update_data)
 
 	def renderDiscards(self, cards):
 		self._displayCards(cards, False)
@@ -342,7 +379,7 @@ class RenderUI:
 						self._eraseCards(is_hand)
 						return selected_cards
 					else:
-						# TODO display error message
+						# do nothing, player did not select valid cards
 						continue
 				# case for when player is selecting discard
 				else:

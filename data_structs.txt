@@ -23,6 +23,7 @@ update_data = {}
 	player[] players
 	int cur_pid
 	card[] last_discards
+	card last_pick_up
 
 game_data = {}
 	int num_players

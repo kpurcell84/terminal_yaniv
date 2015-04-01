@@ -16,6 +16,7 @@ class Game:
     yaniv = False
     yaniv_pid = -1
     players = []
+    last_pick_up = None
 
     def __init__(self):
         self.getPlayers()
@@ -115,9 +116,12 @@ class Game:
         # if chosen, draw card from deck
         if post_turn_data['pick_up_idx'] == 0:
             new_card = self.deck.drawCard()
+            self.last_pick_up = ["D", "D", 0]
         # else draw top discard card
         else:
             new_card = self.deck.drawDiscard(post_turn_data['pick_up_idx'])
+            self.last_pick_up = new_card
+
         self.insertCard(pid, new_card)
 
         # get rid of client's discards
@@ -138,7 +142,7 @@ class Game:
     # up from the deck
     def aiTurn(self, pid):
         # thinking.....
-        time.sleep(2)
+        time.sleep(5)
 
         # discard highest card
         dcards = []
@@ -153,6 +157,7 @@ class Game:
     # update all the human players as to what's going on
     def sendUpdate(self, pid):
         update_data = {}
+        update_data['last_pick_up'] = self.last_pick_up
         update_data['cur_pid'] = pid
         # make a deep copy and remove connection info before serializing
         players_copy = deepcopy(self.players)
