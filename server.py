@@ -10,7 +10,7 @@ import time
 import json
 from copy import deepcopy
 
-class Game:
+class Server:
     score_max = 200
     deck = None
     yaniv = False
@@ -19,9 +19,7 @@ class Game:
     last_pick_up = None
 
     def __init__(self):
-        self.getPlayers()
-        logger.write("Players initialized")
-        self.driver()
+        pass
 
     def getPlayers(self): 
         host = '' 
@@ -207,6 +205,7 @@ class Game:
 
 
 if __name__=='__main__':
-    Game()
-
-
+    server = Server()
+    server.getPlayers()
+    logger.write("Players initialized")
+    server.driver()
