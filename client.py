@@ -9,85 +9,88 @@ import sys
 import json
 
 class Client:
-	port = 0
-	name = ""
-	ui = None
-	client = None
+    port = 0
+    name = ""
+    ui = None
+    client = None
 
-	def __init__(self):
-		pass
+    def __init__(self):
+        pass
 
-	def joinServer(self):
-		# get port number
-		while 1:
-			port = raw_input("Enter the server port: ")
-			try:
-				self.port = int(port)
-			except ValueError:
-				print "Enter a valid port number"
-				continue
-			break
+    def joinServer(self):
+        # get port number
+        while 1:
+            if len(sys.argv) == 2:
+                port = sys.argv[1]
+            else:
+                port = raw_input("Enter the server port: ")
+            try:
+                self.port = int(port)
+            except ValueError:
+                print "Enter a valid port number"
+                continue
+            break
 
-		# connect to server
-		self.client = jsocket.JsonClient(port=self.port)
-		self.client.connect()
+        # connect to server
+        self.client = jsocket.JsonClient(port=self.port)
+        self.client.connect()
 
-		# enter initials and join game on server
-		while 1:
-			self.name = raw_input("Enter your initials: ")
-			while len(self.name) > 3 or len(self.name) == 0:
-				print "Please enter 1-3 letters"
-				self.name = raw_input("Enter your initials: ")
+        # enter initials and join game on server
+        while 1:
+            self.name = raw_input("Enter your initials: ")
+            while len(self.name) > 3 or len(self.name) == 0:
+                print "Please enter 1-3 letters"
+                self.name = raw_input("Enter your initials: ")
 
-			self.client.send_obj({'name':self.name})
-			name_data = self.client.read_obj()
-			if name_data['name'] == self.name:
-				print "Successfully joined"
-				break
-			else:
-				print "Those initials are already in use"
+            self.client.send_obj({'name':self.name})
+            name_data = self.client.read_obj()
+            if name_data['name'] == self.name:
+                print "Successfully joined"
+                break
+            else:
+                print "Those initials are already in use"
 
-		print "Waiting for other players..."
-		game_data = self.client.read_obj()
+        print "Waiting for other players..."
+        game_data = self.client.read_obj()
 
-	def playGame(self):
-		self.ui = RenderUI()
-		while 1:
-			# receive updates from server
-			update_data = self.client.read_obj()
-			self.ui.renderUpdate(update_data)
+    def playGame(self):
+        self.ui = RenderUI()
+        while 1:
+            # receive updates from server
+            update_data = self.client.read_obj()
+            self.ui.renderUpdate(update_data)
 
-			cur_pid = update_data['cur_pid']
-			cur_name = update_data['players'][cur_pid]['name']
-			if cur_name != self.name:
-				# go back to look for another update if not your turn
-				continue
+            cur_pid = update_data['cur_pid']
+            cur_name = update_data['players'][cur_pid]['name']
+            if cur_name != self.name:
+                # go back to look for another update if not your turn
+                continue
 
-			pre_turn_data = self.client.read_obj()
-			# check if round/game ended
-			if pre_turn_data['roundover']:
-				# TODO display end of round stats
-				if pre_turn_data['gameover']:
-					break
-			
-			self.ui.renderDiscards(pre_turn_data['last_discards'])
-			discards = self.ui.chooseHand(pre_turn_data['hand'])
-			self.ui.renderHand(pre_turn_data['hand'])
-			cur_card = self.ui.chooseDiscards(pre_turn_data['last_discards'])
+            pre_turn_data = self.client.read_obj()
+            # check if round/game ended
+            if pre_turn_data['roundover']:
+                # TODO display end of round stats
+                if pre_turn_data['gameover']:
+                    break
+            
+            self.ui.renderDiscards(pre_turn_data['last_discards'])
+            discards = self.ui.chooseHand(pre_turn_data['hand'])
+            self.ui.renderHand(pre_turn_data['hand'])
+            cur_card = self.ui.chooseDiscards(pre_turn_data['last_discards'])
 
-			post_turn_data = {}
-			post_turn_data['pick_up_idx'] = cur_card
-			post_turn_data['discards'] = discards
-			post_turn_data['yaniv'] = False
-			self.client.send_obj(post_turn_data)
+            post_turn_data = {}
+            post_turn_data['pick_up_idx'] = cur_card
+            post_turn_data['discards'] = discards
+            post_turn_data['yaniv'] = False
+            self.client.send_obj(post_turn_data)
 
-			# receive updated data and display
-			pre_turn_data = self.client.read_obj()
-			self.ui.renderHand(pre_turn_data['hand'])
-			self.ui.renderDiscards(pre_turn_data['last_discards'])
+            # receive updated data and display
+            pre_turn_data = self.client.read_obj()
+            self.ui.renderHand(pre_turn_data['hand'])
+            self.ui.renderDiscards(pre_turn_data['last_discards'])
 
 
 if __name__=='__main__':
-	client = Client()
-	client.joinServer()
-	client.playGame()
+    client = Client()
+    client.joinServer()
+    client.playGame()

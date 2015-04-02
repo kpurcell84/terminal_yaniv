@@ -11,6 +11,9 @@ import json
 from copy import deepcopy
 
 class Server:
+    port = 0
+    server = None
+
     score_max = 200
     deck = None
     yaniv = False
@@ -21,18 +24,32 @@ class Server:
     def __init__(self):
         pass
 
-    def getPlayers(self): 
+    def configureServer(self):
         host = '' 
-        port = 50000 
         backlog = 5
         
-        server = jsocket.JsonServer(port=port)
+        # get port number
+        while 1:
+            if len(sys.argv) == 2:
+                port = sys.argv[1]
+            else:
+                port = raw_input("Enter an unused port to run the server on: ")
+            try:
+                self.port = int(port)
+            except ValueError:
+                print "Enter a valid port number"
+                continue
+            break
+
+        self.server = jsocket.JsonServer(port=self.port)
+
+    def getPlayers(self): 
         # wait for a single player
         print "Waiting for players..."
         while 1: 
-            server.accept_connection()
+            self.server.accept_connection()
             while 1:
-                name_data = server.read_obj()
+                name_data = self.server.read_obj()
                 name_valid = True
                 for player in self.players:
                     if player['name'] == name_data['name']:
@@ -42,7 +59,7 @@ class Server:
                     break
                 else:
                     print "Repeat name"
-                    server.send_obj({'name':"Repeat"})
+                    self.server.send_obj({'name':"Repeat"})
 
             print name_data['name'] + " has joined" 
             player = {}
@@ -51,11 +68,11 @@ class Server:
             player['score'] = 0
             player['hand'] = []
             player['ai'] = False
-            player['server'] = server
+            player['server'] = self.server
             self.players.append(player)
             # respond to client with name
             time.sleep(1)
-            server.send_obj(name_data)
+            self.server.send_obj(name_data)
             break
 
         # hardcoded ai players
@@ -206,6 +223,7 @@ class Server:
 
 if __name__=='__main__':
     server = Server()
+    server.configureServer()
     server.getPlayers()
     logger.write("Players initialized")
     server.driver()

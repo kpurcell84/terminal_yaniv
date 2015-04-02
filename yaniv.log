@@ -791,3 +791,19 @@
 
 [Thu 04/02/2015 12:21:07] [{u'ai': False, u'score': 0, u'pid': 0, u'name': u'KP', u'hand': [[u'7', u'h', 7], [u'6', u'c', 6], [u'5', u'h', 5], [u'3', u's', 3], [u'2', u'd', 2]]}, {u'ai': True, u'score': 0, u'pid': 1, u'name': u'ai1', u'hand': [[u'T', u'c', 10], [u'7', u'c', 7], [u'2', u'h', 2], [u'2', u'c', 2], [u'A', u'c', 1]]}, {u'ai': True, u'score': 0, u'pid': 2, u'name': u'ai2', u'hand': [[u'T', u'd', 10], [u'9', u's', 9], [u'8', u'c', 8], [u'8', u's', 8], [u'3', u'd', 3]]}, {u'ai': True, u'score': 0, u'pid': 3, u'name': u'ai3', u'hand': [[u'K', u's', 13], [u'K', u'c', 13], [u'Q', u'h', 12], [u'5', u'd', 5], [u'A', u'd', 1]]}]
 
+[Thu 04/02/2015 12:26:35] Players initialized
+
+[Thu 04/02/2015 12:26:35] [{'name': u'KP', 'ai': False, 'pid': 0, 'server': <jsocket.jsocket_base.JsonServer object at 0x7faac3e9af50>, 'score': 0, 'hand': [['Q', 'h', 12], ['8', 'c', 8], ['8', 'h', 8], ['7', 'h', 7], ['2', 'h', 2]]}, {'ai': True, 'score': 0, 'pid': 1, 'name': 'ai1', 'hand': [['6', 'h', 6], ['3', 's', 3], ['3', 'd', 3], ['2', 'd', 2], ['A', 'd', 1]]}, {'ai': True, 'score': 0, 'pid': 2, 'name': 'ai2', 'hand': [['K', 'd', 13], ['6', 's', 6], ['5', 'd', 5], ['2', 's', 2], ['A', 'c', 1]]}, {'ai': True, 'score': 0, 'pid': 3, 'name': 'ai3', 'hand': [['Q', 'd', 12], ['J', 'd', 11], ['J', 's', 11], ['6', 'd', 6], ['4', 'c', 4]]}]
+
+[Thu 04/02/2015 12:26:35] 0
+
+[Thu 04/02/2015 12:26:35] [{u'ai': False, u'score': 0, u'pid': 0, u'name': u'KP', u'hand': [[u'Q', u'h', 12], [u'8', u'c', 8], [u'8', u'h', 8], [u'7', u'h', 7], [u'2', u'h', 2]]}, {u'ai': True, u'score': 0, u'pid': 1, u'name': u'ai1', u'hand': [[u'6', u'h', 6], [u'3', u's', 3], [u'3', u'd', 3], [u'2', u'd', 2], [u'A', u'd', 1]]}, {u'ai': True, u'score': 0, u'pid': 2, u'name': u'ai2', u'hand': [[u'K', u'd', 13], [u'6', u's', 6], [u'5', u'd', 5], [u'2', u's', 2], [u'A', u'c', 1]]}, {u'ai': True, u'score': 0, u'pid': 3, u'name': u'ai3', u'hand': [[u'Q', u'd', 12], [u'J', u'd', 11], [u'J', u's', 11], [u'6', u'd', 6], [u'4', u'c', 4]]}]
+
+[Thu 04/02/2015 12:29:52] Players initialized
+
+[Thu 04/02/2015 12:29:52] [{'name': u'KP', 'ai': False, 'pid': 0, 'server': <jsocket.jsocket_base.JsonServer object at 0x7f1e51ccdf50>, 'score': 0, 'hand': [['J', 's', 11], ['9', 'c', 9], ['4', 'h', 4], ['2', 'c', 2], ['A', 'h', 1]]}, {'ai': True, 'score': 0, 'pid': 1, 'name': 'ai1', 'hand': [['J', 'h', 11], ['T', 'h', 10], ['6', 's', 6], ['4', 'c', 4], ['2', 'h', 2]]}, {'ai': True, 'score': 0, 'pid': 2, 'name': 'ai2', 'hand': [['9', 's', 9], ['9', 'h', 9], ['8', 'c', 8], ['7', 's', 7], ['4', 's', 4]]}, {'ai': True, 'score': 0, 'pid': 3, 'name': 'ai3', 'hand': [['K', 'd', 13], ['K', 'c', 13], ['T', 'c', 10], ['7', 'd', 7], ['5', 'd', 5]]}]
+
+[Thu 04/02/2015 12:29:52] 0
+
+[Thu 04/02/2015 12:29:52] [{u'ai': False, u'score': 0, u'pid': 0, u'name': u'KP', u'hand': [[u'J', u's', 11], [u'9', u'c', 9], [u'4', u'h', 4], [u'2', u'c', 2], [u'A', u'h', 1]]}, {u'ai': True, u'score': 0, u'pid': 1, u'name': u'ai1', u'hand': [[u'J', u'h', 11], [u'T', u'h', 10], [u'6', u's', 6], [u'4', u'c', 4], [u'2', u'h', 2]]}, {u'ai': True, u'score': 0, u'pid': 2, u'name': u'ai2', u'hand': [[u'9', u's', 9], [u'9', u'h', 9], [u'8', u'c', 8], [u'7', u's', 7], [u'4', u's', 4]]}, {u'ai': True, u'score': 0, u'pid': 3, u'name': u'ai3', u'hand': [[u'K', u'd', 13], [u'K', u'c', 13], [u'T', u'c', 10], [u'7', u'd', 7], [u'5', u'd', 5]]}]
+
