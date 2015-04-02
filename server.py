@@ -66,6 +66,7 @@ class Server:
             player['pid'] = 0
             player['name'] = name_data['name']
             player['score'] = 0
+            player['yaniv_count'] = 0
             player['hand'] = []
             player['ai'] = False
             player['server'] = self.server
@@ -81,6 +82,7 @@ class Server:
             player['pid'] = i
             player['name'] = "ai" + str(i)
             player['score'] = 0
+            player['yaniv_count'] = 0
             player['hand'] = []
             player['ai'] = True
             self.players.append(player)
@@ -125,6 +127,7 @@ class Server:
         # check if client called a valid yaniv
         if post_turn_data['yaniv']:
             self.yaniv = True
+            self.yaniv_pid = pid
             return
  
         new_card = None
@@ -157,7 +160,7 @@ class Server:
     # up from the deck
     def aiTurn(self, pid):
         # thinking.....
-        time.sleep(5)
+        time.sleep(2)
 
         # discard highest card
         dcards = []
@@ -186,9 +189,43 @@ class Server:
             if not player['ai']:
                 player['server'].send_obj(update_data)
 
-    # add round scores to players totals
+    # check for a winner and add round scores to player's totals
     def addRoundScores(self):
-        pass
+        winners = []
+        hand_sums = []
+        lowest_hand = 100
+        for pid,player in enumerate(self.players):
+            # sum up score of hand
+            hand_sum = 0
+            for card in player['hand']:
+                point_val = card[3]
+                # round down face cards
+                if point_val > 10:
+                    point_val = 10
+                hand_sum += point_val
+            
+            if hand_sum < lowest_hand:
+                lowest_hand = hand_sum
+                winners = []
+                winners.append(pid)
+            elif hand_sum == lowest_hand:
+                winners.append(pid)
+
+            hand_sums.append(hand_sum)
+
+        # add points
+        for pid,player in enumerate(self.players):
+            # check if player won and don't add any points
+            if winners.count(pid) == 1:
+                continue
+            # player called yaniv and lost
+            if pid == yaniv_pid:
+                player['score'] += 30
+
+            player['score'] += hand_sums[pid]
+            # check for halving
+            if player['score'] % 50 == 0:
+                player['score'] /= 2
 
     def driver(self):
         # game loop
@@ -213,6 +250,7 @@ class Server:
                         self.humanTurn(pid)
                     
                     if self.yaniv:
+                        self.yaniv = False
                         break      
                 print "players:"
                 print self.players

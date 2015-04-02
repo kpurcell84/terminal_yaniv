@@ -4,6 +4,7 @@ player = {}
 	int pid
 	str name
 	int score
+	int yaniv_count
 	card[] hand
 	bool ai
 	serverconn server
@@ -24,6 +25,9 @@ update_data = {}
 	int cur_pid
 	card[] last_discards
 	card last_pick_up
+
+round_update = {}
+
 
 game_data = {}
 	int num_players

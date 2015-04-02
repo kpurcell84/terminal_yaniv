@@ -312,6 +312,9 @@ class RenderUI:
 
 		self.renderMessage(message)
 
+	def _checkValidYaniv(self, hand):
+		return True
+
 	def renderMessage(self, message):
 		self.message_win.erase()
 		self.message_win.addstr(0, 0, str(message))
@@ -336,6 +339,8 @@ class RenderUI:
 
 	# if is_hand == True (player is selecting cards to put down)
 	# 	returns list of selected cards
+	#	if player calls yaniv:
+	#		returns empty list
 	# else (player is selecting discard to pick up)
 	#	returns cur_card
 	def _chooseCardsHelper(self, stdscr, cards, is_hand):
@@ -385,3 +390,7 @@ class RenderUI:
 				else:
 					self._eraseCards(is_hand)
 					return self.cur_card
+			# player called yaniv
+			elif c == ord('y'):
+				if self._checkValidYaniv(cards):
+					return []

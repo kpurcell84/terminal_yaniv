@@ -75,14 +75,20 @@ class Client:
             
             self.ui.renderDiscards(pre_turn_data['last_discards'])
             discards = self.ui.chooseHand(pre_turn_data['hand'])
-            self.ui.renderHand(pre_turn_data['hand'])
-            cur_card = self.ui.chooseDiscards(pre_turn_data['last_discards'])
+            # check if player called yaniv
+            if not discards:
+                 post_turn_data = {}
+                 post_turn_data['yaniv'] = True
+                 self.client.send_obj(post_turn_data)
+            else:     
+                self.ui.renderHand(pre_turn_data['hand'])
+                cur_card = self.ui.chooseDiscards(pre_turn_data['last_discards'])
 
-            post_turn_data = {}
-            post_turn_data['pick_up_idx'] = cur_card
-            post_turn_data['discards'] = discards
-            post_turn_data['yaniv'] = False
-            self.client.send_obj(post_turn_data)
+                post_turn_data = {}
+                post_turn_data['pick_up_idx'] = cur_card
+                post_turn_data['discards'] = discards
+                post_turn_data['yaniv'] = False
+                self.client.send_obj(post_turn_data)
 
             # receive updated data and display
             pre_turn_data = self.client.read_obj()
