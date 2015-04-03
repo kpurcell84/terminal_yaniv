@@ -62,16 +62,11 @@ class Client:
 
             cur_pid = update_data['cur_pid']
             cur_name = update_data['players'][cur_pid]['name']
-            if cur_name != self.name:
+            if cur_name != self.name or update_data['yaniv']:
                 # go back to look for another update if not your turn
                 continue
 
             pre_turn_data = self.client.read_obj()
-            # check if round/game ended
-            if pre_turn_data['roundover']:
-                # TODO display end of round stats
-                if pre_turn_data['gameover']:
-                    break
             
             self.ui.renderDiscards(pre_turn_data['last_discards'])
             discards = self.ui.chooseHand(pre_turn_data['hand'])
@@ -80,7 +75,7 @@ class Client:
                  post_turn_data = {}
                  post_turn_data['yaniv'] = True
                  self.client.send_obj(post_turn_data)
-            else:     
+            else:
                 self.ui.renderHand(pre_turn_data['hand'])
                 cur_card = self.ui.chooseDiscards(pre_turn_data['last_discards'])
 

@@ -12,8 +12,6 @@ player = {}
 pre_turn_data = {}
 	card[] hand
 	card[] last_discards
-	bool roundover
-	bool gameover
 
 post_turn_data = {}
 	card[] discards
@@ -25,9 +23,8 @@ update_data = {}
 	int cur_pid
 	card[] last_discards
 	card last_pick_up
-
-round_update = {}
-
+	bool yaniv
+	int[] hand_sums
 
 game_data = {}
 	int num_players

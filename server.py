@@ -111,8 +111,6 @@ class Server:
         pre_turn_data = {}
         pre_turn_data['hand'] = self.players[pid]['hand']
         pre_turn_data['last_discards'] = self.deck.getLastDiscards()
-        pre_turn_data['gameover'] = False
-        pre_turn_data['roundover'] = False
         print "pre_turn_data:"
         print pre_turn_data
         print ""
@@ -128,31 +126,28 @@ class Server:
         if post_turn_data['yaniv']:
             self.yaniv = True
             self.yaniv_pid = pid
-            return
- 
-        new_card = None
-        # if chosen, draw card from deck
-        if post_turn_data['pick_up_idx'] == 0:
-            new_card = self.deck.drawCard()
-            self.last_pick_up = ["D", "D", 0]
-        # else draw top discard card
         else:
-            new_card = self.deck.drawDiscard(post_turn_data['pick_up_idx'])
-            self.last_pick_up = new_card
+            new_card = None
+            # if chosen, draw card from deck
+            if post_turn_data['pick_up_idx'] == 0:
+                new_card = self.deck.drawCard()
+                self.last_pick_up = ["D", "D", 0]
+            # else draw top discard card
+            else:
+                new_card = self.deck.drawDiscard(post_turn_data['pick_up_idx'])
+                self.last_pick_up = new_card
 
-        self.insertCard(pid, new_card)
+            self.insertCard(pid, new_card)
 
-        # get rid of client's discards
-        self.deck.discardCards(post_turn_data['discards'])
-        for discard in post_turn_data['discards']:
-            self.players[pid]['hand'].remove(discard)
+            # get rid of client's discards
+            self.deck.discardCards(post_turn_data['discards'])
+            for discard in post_turn_data['discards']:
+                self.players[pid]['hand'].remove(discard)
 
         # send client back new hand
         pre_turn_data = {}
         pre_turn_data['hand'] = self.players[pid]['hand']
         pre_turn_data['last_discards'] = self.deck.getLastDiscards()
-        pre_turn_data['gameover'] = False
-        pre_turn_data['roundover'] = False
         server.send_obj(pre_turn_data)
         
 
@@ -173,8 +168,10 @@ class Server:
         self.insertCard(pid, new_card)
 
     # update all the human players as to what's going on
-    def sendUpdate(self, pid):
+    def sendUpdate(self, pid, yaniv=False, hand_sums=None):
         update_data = {}
+        update_data['yaniv'] = yaniv
+        update_data['hand_sums'] = hand_sums
         update_data['last_pick_up'] = self.last_pick_up
         update_data['cur_pid'] = pid
         # make a deep copy and remove connection info before serializing
@@ -198,7 +195,7 @@ class Server:
             # sum up score of hand
             hand_sum = 0
             for card in player['hand']:
-                point_val = card[3]
+                point_val = card[2]
                 # round down face cards
                 if point_val > 10:
                     point_val = 10
@@ -219,7 +216,7 @@ class Server:
             if winners.count(pid) == 1:
                 continue
             # player called yaniv and lost
-            if pid == yaniv_pid:
+            if pid == self.yaniv_pid:
                 player['score'] += 30
 
             player['score'] += hand_sums[pid]
@@ -227,19 +224,25 @@ class Server:
             if player['score'] % 50 == 0:
                 player['score'] /= 2
 
+        self.sendUpdate(self.yaniv_pid, yaniv=True, hand_sums=hand_sums)
+
     def driver(self):
         # game loop
         while self.checkWin() == False:
             # reset the deck
             self.deck = Deck()
+
             # deal cards to players
             for pid,player in enumerate(self.players):
+                # reset player hand
+                player['hand'] = []
                 for i in range(5):
                     dealt_card = self.deck.drawCard()
                     self.insertCard(pid, dealt_card)
             logger.write(self.players)
             # break
             # round loop
+            self.yaniv = False
             while 1:
                 for pid,player in enumerate(self.players):
                     self.sendUpdate(pid)
@@ -250,12 +253,9 @@ class Server:
                         self.humanTurn(pid)
                     
                     if self.yaniv:
-                        self.yaniv = False
-                        break      
-                print "players:"
-                print self.players
-                print ""
-            break
+                        break
+                if self.yaniv:    
+                    break
             self.addRoundScores()
 
 

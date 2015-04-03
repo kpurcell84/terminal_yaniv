@@ -30,10 +30,13 @@ class RenderUI:
 	stats_width = 50
 	message_height = 4
 	message_width = 50
+	yaniv_height = 10
+	yaniv_width = 80
 	rcards = []
 	stdscr = None
 	hand = None
 	suits = {'d':"Diamonds", 'h':"Hearts", 's':"Spades", 'c':"Clubs"}
+	round_break = 15 # seconds to wait between rounds
 	# windows
 	stats_outer_win = None
 	stats_win = None
@@ -42,6 +45,7 @@ class RenderUI:
 	select_win1 = None
 	select_win2 = None
 	message_win = None
+	yaniv_win = None
 	
 	def __init__(self):
 		return curses.wrapper(self.__init__helper)
@@ -70,6 +74,8 @@ class RenderUI:
 		discard_begin_y = self.stats_outer_win.getbegyx()[0] + self.stats_height
 		self.discard_win = curses.newwin(self.card_height, (self.card_width+1)*6, discard_begin_y, discard_begin_x)
 
+		self.yaniv_win = curses.newwin(self.yaniv_height, self.yaniv_width, discard_begin_y, discard_begin_x)
+
 		select1_begin_x = self.left_margin
 		select1_begin_y = self.discard_win.getbegyx()[0] + self.card_height
 		self.select_win1 = curses.newwin(1, (self.card_width+1)*5, select1_begin_y, select1_begin_x)
@@ -88,6 +94,7 @@ class RenderUI:
 
 		self.stats_win.bkgd(' ', curses.color_pair(1))
 		self.discard_win.bkgd(' ', curses.color_pair(1))
+		self.yaniv_win.bkgd(' ', curses.color_pair(1))
 		self.select_win1.bkgd(' ', curses.color_pair(1))
 		self.hand_win.bkgd(' ', curses.color_pair(1))
 		self.select_win2.bkgd(' ', curses.color_pair(1))
@@ -312,8 +319,47 @@ class RenderUI:
 
 		self.renderMessage(message)
 
+	def _displayYaniv(self, update_data):
+		# get rid of all cards and messages
+		self._eraseCards(True)
+		self._eraseCards(False)
+		self.renderMessage("")
+
+		cur_pid = update_data['cur_pid']
+		yaniv_name = update_data['players'][cur_pid]['name']
+			
+		self.yaniv_win.addstr(1,1, yaniv_name + " has called Yaniv!")
+		points_str = ""
+		for pid,player in enumerate(update_data['players']):
+			points_str += player['name'] + " finished with: "
+			for card in player['hand']:
+				points_str += card[0] + " "
+			points_str += "for a total of " + str(update_data['hand_sums'][pid]) + " points\n"
+		logger.write(points_str)
+		self.yaniv_win.addstr(3,1, points_str)
+		self.yaniv_win.refresh()
+
+		# display a countdown timer until the next round
+		timer = self.round_break
+		self.yaniv_win.addstr(self.yaniv_height-1, 1, "Next round starts in: ")
+		while timer>0:
+			self.yaniv_win.addstr(self.yaniv_height-1, 23, "   ")
+			self.yaniv_win.addstr(self.yaniv_height-1, 23, str(timer))
+			self.yaniv_win.refresh()
+			time.sleep(1)
+			timer -= 1
+		self.yaniv_win.erase()
+		self.yaniv_win.refresh()
+
 	def _checkValidYaniv(self, hand):
-		return True
+		hand_sum = 0
+		for card in hand:
+			hand_sum += card[2]
+
+		if hand_sum > 5:
+			return False
+		else:
+			return True 
 
 	def renderMessage(self, message):
 		self.message_win.erase()
@@ -322,8 +368,12 @@ class RenderUI:
 
 	def renderUpdate(self, update_data):
 		self._displayStats(update_data['players'], update_data['cur_pid'])
-		self.renderDiscards(update_data['last_discards'])
-		self._displayTurnMessage(update_data)
+
+		if update_data['yaniv']:
+			self._displayYaniv(update_data)
+		else:
+			self.renderDiscards(update_data['last_discards'])
+			self._displayTurnMessage(update_data)
 
 	def renderDiscards(self, cards):
 		self._displayCards(cards, False)
