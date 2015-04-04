@@ -13,26 +13,42 @@ class Client:
     name = ""
     ui = None
     client = None
+    server_ip = ""
 
     def __init__(self):
         pass
 
+    # optional command line args:
+    #   ./client.py [port] [server_ip]
     def joinServer(self):
         # get port number
         while 1:
-            if len(sys.argv) == 2:
+            if len(sys.argv) >= 2:
                 port = sys.argv[1]
             else:
                 port = raw_input("Enter the server port: ")
             try:
                 self.port = int(port)
+                break
             except ValueError:
                 print "Enter a valid port number"
-                continue
-            break
+
+        # get server ip address
+        while 1:
+            if len(sys.argv) >= 3:
+                server_ip = sys.argv[2]
+            else:
+                server_ip = raw_input("Enter the server IP address: ")
+            try:
+                socket.inet_aton(server_ip)
+                self.server_ip = server_ip
+                break
+            except socket.error as msg:
+                print "Enter a valid IP address\n" + str(msg)
+            
 
         # connect to server
-        self.client = jsocket.JsonClient(port=self.port)
+        self.client = jsocket.JsonClient(port=self.port, address=self.server_ip)
         self.client.connect()
 
         # enter initials and join game on server

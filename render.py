@@ -29,7 +29,7 @@ class RenderUI:
 	stats_height = 6
 	stats_width = 50
 	message_height = 4
-	message_width = 50
+	message_width = 100
 	yaniv_height = 10
 	yaniv_width = 80
 	rcards = []
