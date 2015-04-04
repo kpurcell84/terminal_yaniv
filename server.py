@@ -13,6 +13,7 @@ from copy import deepcopy
 class Server:
     port = 0
     server = None
+    num_humans = 0
 
     score_max = 200
     deck = None
@@ -24,6 +25,8 @@ class Server:
     def __init__(self):
         pass
 
+    # optional command line args:
+    #   ./server.py [port] [num_humans]
     def configureServer(self):
         host = '' 
         backlog = 5
@@ -40,13 +43,31 @@ class Server:
                 print "Enter a valid port number"
                 continue
             break
+        # get number of human players
+        while 1:
+            if len(sys.argv) == 3:
+                num_humans = sys.argv[2]
+            else:
+                num_humans = raw_input("How many human players would you like to play with: ")
+            try:
+                num_humans = int(num_humans)
+                if num_humans < 1 or num_humans > 8:
+                    print "Enter a valid number (1-8)"
+                    continue
+                else:
+                    self.num_humans = num_humans
+            except ValueError:
+                print "Enter a valid number (1-8)"
+                continue
+            break
 
         self.server = jsocket.JsonServer(port=self.port)
 
     def getPlayers(self): 
         # wait for a single player
         print "Waiting for players..."
-        while 1: 
+        humans_joined = 0
+        while humans_joined < self.num_humans: 
             self.server.accept_connection()
             while 1:
                 name_data = self.server.read_obj()
@@ -72,12 +93,11 @@ class Server:
             player['server'] = self.server
             self.players.append(player)
             # respond to client with name
-            time.sleep(1)
             self.server.send_obj(name_data)
-            break
+            humans_joined += 1
 
-        # hardcoded ai players
-        for i in range(1,4):
+        # fill in rest of spots with hardcoded ai players
+        for i in range(8-self.num_humans):
             player = {}
             player['pid'] = i
             player['name'] = "ai" + str(i)
