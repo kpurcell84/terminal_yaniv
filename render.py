@@ -16,13 +16,13 @@ class RenderUI:
 	stats_width = 50
 	message_height = 4
 	message_width = 100
-	yaniv_height = 10
-	yaniv_width = 80
+	yaniv_height = 14
+	yaniv_width = 100
 	rcards = []
 	stdscr = None
 	hand = None
 	suits = {'d':"Diamonds", 'h':"Hearts", 's':"Spades", 'c':"Clubs"}
-	round_break = 15 # seconds to wait between rounds
+	round_break = 30 # seconds to wait between rounds
 	# windows
 	stats_outer_win = None
 	stats_win = None

@@ -18,6 +18,7 @@ class Server:
     server = None
     host_ip = ""
     num_humans = 0
+    ai_think_secs = 0
 
     score_max = 200
     deck = None
@@ -96,7 +97,7 @@ class Server:
         
     def _aiTurn(self, pid):
         # thinking.....
-        time.sleep(2)
+        time.sleep(self.ai_think_secs)
 
         return_val = ai.makeDecision(self.deck, self.players, pid)
         if return_val:

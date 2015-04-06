@@ -19,6 +19,7 @@ def easyAi(deck, players, pid):
     logger.write(deck.getLastDiscards())
     logger.write("ai hand")
     logger.write(players[pid]['hand'])
+
     # call yaniv if hand sum 5 or under
     hand_sum = 0
     yaniv = True
@@ -53,6 +54,21 @@ def easyAi(deck, players, pid):
                 break
 
         prev_card_val = card[0]
+    # edge case for 1 set left, put down set and pick up discard if < 5
+    if not biggest_set:
+        biggest_set = cur_set[:]
+        pick_up_idx = 0
+        for did,last_dcard in enumerate(last_dcards):
+            if last_dcard[2] <= 5:
+                pick_up_idx = did+1
+                break
+
+    # always pick up card if <= 2
+    elif pick_up_idx == 0:
+        for did,last_dcard in enumerate(last_dcards):
+            if last_dcard[2] <= 2:
+                pick_up_idx = did+1
+                break
 
     # decide whether to pick up from deck or pick up discard
     if pick_up_idx == 0:
