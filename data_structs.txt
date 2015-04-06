@@ -6,7 +6,7 @@ player = {}
 	int score
 	int yaniv_count
 	card[] hand
-	bool ai
+	int ai
 	serverconn server
 
 pre_turn_data = {}

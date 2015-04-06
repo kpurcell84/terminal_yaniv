@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from deck import Deck
+import ai
 import logger
 
 import socket
@@ -93,22 +94,16 @@ class Server:
         pre_turn_data['last_discards'] = self.deck.getLastDiscards()
         server.send_obj(pre_turn_data)
         
-
-    # extremely basic ai which discards highest card and picks
-    # up from the deck
     def _aiTurn(self, pid):
         # thinking.....
         time.sleep(2)
 
-        # discard highest card
-        dcards = []
-        high_card = self.players[pid]['hand'].pop(0)
-        dcards.append(high_card)
-        self.deck.discardCards(dcards)
-
-        # pick up from deck
-        new_card = self.deck.drawCard()
-        self._insertCard(pid, new_card)
+        return_val = ai.makeDecision(self.deck, self.players, pid)
+        if return_val:
+            self.last_pick_up = return_val
+        else:
+            self.yaniv = True
+            self.yaniv_pid = pid
 
     # update all the human players as to what's going on
     def _sendUpdate(self, pid, yaniv=False, hand_sums=None):
@@ -230,7 +225,7 @@ class Server:
             player['score'] = 0
             player['yaniv_count'] = 0
             player['hand'] = []
-            player['ai'] = False
+            player['ai'] = 0
             player['server'] = self.server
             self.players.append(player)
             # respond to client with name
@@ -238,14 +233,14 @@ class Server:
             humans_joined += 1
 
         # fill in rest of spots with hardcoded ai players
-        for i in range(8-self.num_humans):
+        for i in range(self.num_humans,8):
             player = {}
             player['pid'] = i
             player['name'] = "ai" + str(i)
             player['score'] = 0
             player['yaniv_count'] = 0
             player['hand'] = []
-            player['ai'] = True
+            player['ai'] = 1
             self.players.append(player)
 
         # send game initialization data over

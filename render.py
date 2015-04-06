@@ -6,20 +6,6 @@ import curses
 import time
 import sys
 
-## start curse app
-# stdscr = curses.initscr()
-# curses.noecho()
-# curses.cbreak()
-# stdscr.keypad(1)
-
-
-## end curse app
-# curses.nocbreak()
-# stdscr.keypad(0)
-# curses.echo()
-# curses.curs_set(1)
-# curses.endwin()
-
 class RenderUI:
 	cur_card = 0
 	left_margin = 5
@@ -99,22 +85,6 @@ class RenderUI:
 		self.hand_win.bkgd(' ', curses.color_pair(1))
 		self.select_win2.bkgd(' ', curses.color_pair(1))
 		self.message_win.bkgd(' ', curses.color_pair(1))
-
-		# self.stats_win.box()
-		# self.discard_win.box()
-		# self.select_win1.box()
-		# self.hand_win.box()
-		# self.select_win2.box()
-		# self.message_win.box()
-
-		# self.stats_win.refresh()
-		# self.discard_win.refresh()
-		# self.select_win1.box()
-		# self.hand_win.refresh()
-		# self.select_win2.refresh()
-		# self.message_win.refresh()
-
-		# time.sleep(5)
 
 	def _nextCard(self, is_hand):
 		# unbold cur_card
