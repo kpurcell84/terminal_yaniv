@@ -18,7 +18,7 @@ class Server:
     server = None
     host_ip = ""
     num_humans = 0
-    ai_think_secs = 0
+    ai_think_secs = 2
 
     score_max = 200
     deck = None
@@ -49,6 +49,29 @@ class Server:
         self.players[pid]['hand'].insert(0, card)
         self.players[pid]['hand'].sort(key=lambda tup: tup[2], reverse=True)
 
+    # moves the cards from hand and draws discards after a turn
+    def _endTurn(self, pid, post_turn_data):
+        if post_turn_data['yaniv']:
+            self.yaniv = True
+            self.yaniv_pid = pid
+            return
+        
+        # if chosen, draw card from deck
+        if post_turn_data['pick_up_idx'] == 0:
+            new_card = self.deck.drawCard()
+            self.last_pick_up = ["D", "D", 0]
+        # else draw top discard card
+        else:
+            new_card = self.deck.drawDiscard(post_turn_data['pick_up_idx'])
+            self.last_pick_up = new_card
+
+        self._insertCard(pid, new_card)
+
+        # get rid of client's discards
+        self.deck.discardCards(post_turn_data['discards'])
+        for discard in post_turn_data['discards']:
+            self.players[pid]['hand'].remove(discard)
+
     def _humanTurn(self, pid):
         server = self.players[pid]['server']
 
@@ -67,27 +90,7 @@ class Server:
         print post_turn_data
         print ""
 
-        # check if client called a valid yaniv
-        if post_turn_data['yaniv']:
-            self.yaniv = True
-            self.yaniv_pid = pid
-        else:
-            new_card = None
-            # if chosen, draw card from deck
-            if post_turn_data['pick_up_idx'] == 0:
-                new_card = self.deck.drawCard()
-                self.last_pick_up = ["D", "D", 0]
-            # else draw top discard card
-            else:
-                new_card = self.deck.drawDiscard(post_turn_data['pick_up_idx'])
-                self.last_pick_up = new_card
-
-            self._insertCard(pid, new_card)
-
-            # get rid of client's discards
-            self.deck.discardCards(post_turn_data['discards'])
-            for discard in post_turn_data['discards']:
-                self.players[pid]['hand'].remove(discard)
+        self._endTurn(pid, post_turn_data)
 
         # send client back new hand
         pre_turn_data = {}
@@ -99,12 +102,9 @@ class Server:
         # thinking.....
         time.sleep(self.ai_think_secs)
 
-        return_val = ai.makeDecision(self.deck, self.players, pid)
-        if return_val:
-            self.last_pick_up = return_val
-        else:
-            self.yaniv = True
-            self.yaniv_pid = pid
+        post_turn_data = ai.makeDecision(self.deck, self.players, pid)
+
+        self._endTurn(pid, post_turn_data)
 
     # update all the human players as to what's going on
     def _sendUpdate(self, pid, yaniv=False, hand_sums=None):

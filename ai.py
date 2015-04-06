@@ -4,7 +4,7 @@ from deck import Deck
 import logger
 
 # selects the appropriate decision based on AI skill level and
-# returns card picked up or None for yaniv
+# returns post_turn_data object
 def makeDecision(deck, players, pid):
     if players[pid]['ai'] == 1:
         return easyAi(deck, players, pid)
@@ -13,7 +13,6 @@ def makeDecision(deck, players, pid):
     # elif players[pid]['ai'] == 3:
     #     return hardAi(deck, players, pid)
 
-# returns card picked up or None for yaniv
 def easyAi(deck, players, pid):
     logger.write("ai last discards")
     logger.write(deck.getLastDiscards())
@@ -29,7 +28,8 @@ def easyAi(deck, players, pid):
             yaniv = False
             break
     if yaniv:
-        return None
+        post_turn_data = {'yaniv':True}
+        return post_turn_data
 
     # look for largest set that isn't a future set
     prev_card_val = ""
@@ -70,29 +70,13 @@ def easyAi(deck, players, pid):
                 pick_up_idx = did+1
                 break
 
-    # decide whether to pick up from deck or pick up discard
-    if pick_up_idx == 0:
-        new_card = deck.drawCard()
-        return_card = ["D", "D", 0]
-    else:
-        new_card = deck.drawDiscard(pick_up_idx)
-        return_card = new_card
-
-    # discard highest cards with most sets (that aren't a future set)
-    for card in biggest_set:
-        players[pid]['hand'].remove(card)
-    deck.discardCards(biggest_set)
-
-    # insert new card and sort hand
-    players[pid]['hand'].insert(0, new_card)
-    players[pid]['hand'].sort(key=lambda tup: tup[2], reverse=True)
+    post_turn_data = {'yaniv':False, 'discards':biggest_set, 'pick_up_idx':pick_up_idx}
 
     logger.write("ai discards")
     logger.write(biggest_set)
-    logger.write("ai new card")
-    logger.write(new_card)
+    logger.write("ai pick_up_idx:" + str(pick_up_idx))
 
-    return return_card
+    return post_turn_data
 
 def mediumAi(deck, players, pid):
     pass

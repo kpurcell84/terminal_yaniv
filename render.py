@@ -8,6 +8,12 @@ import sys
 
 class RenderUI:
 	cur_card = 0
+	rcards = []
+	stdscr = None
+	hand = None
+	suits = {'d':"Diamonds", 'h':"Hearts", 's':"Spades", 'c':"Clubs"}
+	round_break = 30 # seconds to wait between rounds
+	# window variables
 	left_margin = 5
 	top_margin = 0
 	card_height = 7
@@ -18,11 +24,6 @@ class RenderUI:
 	message_width = 100
 	yaniv_height = 14
 	yaniv_width = 100
-	rcards = []
-	stdscr = None
-	hand = None
-	suits = {'d':"Diamonds", 'h':"Hearts", 's':"Spades", 'c':"Clubs"}
-	round_break = 30 # seconds to wait between rounds
 	# windows
 	stats_outer_win = None
 	stats_win = None
