@@ -23,6 +23,7 @@ update_data = {}
 	int cur_pid
 	card[] last_discards
 	card last_pick_up
+	bool lucky_draw
 	bool yaniv
 	int[] hand_sums
 

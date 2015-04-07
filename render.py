@@ -284,6 +284,8 @@ class RenderUI:
 				message += "and picked up a card from the deck"
 			else:
 				message += "and picked up the [" + update_data['last_pick_up'][0] + " of " + self.suits[update_data['last_pick_up'][1]] + "]"
+			if update_data['lucky_draw']:
+				message += " but immediately put it back down again!"
 			message += "\n\n"
 
 		message += cur_name + "'s turn..."

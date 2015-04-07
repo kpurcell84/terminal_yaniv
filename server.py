@@ -26,6 +26,7 @@ class Server:
     yaniv_pid = -1
     players = []
     last_pick_up = None
+    lucky_draw = False
 
     def __init__(self):
         pass
@@ -49,6 +50,39 @@ class Server:
         self.players[pid]['hand'].insert(0, card)
         self.players[pid]['hand'].sort(key=lambda tup: tup[2], reverse=True)
 
+    # checks if the card the player just picked up from the deck can be placed
+    # down again immediately and if so, inserts the card into the discards
+    def _isLuckyDraw(self, discards, new_card):
+        # determine if it's a set or a straight
+        is_set = True
+        prev_card = []
+        for discard in discards:
+            if prev_card and discard[0] != prev_card[0]:
+                is_set = False
+            prev_card = discard
+
+        if is_set:
+            if discards[0][0] == new_card[0]:
+                discards.append(new_card)
+                return True
+            else:
+                return False
+        # is a straight
+        else:
+            # check if same suit
+            if new_card[1] != discards[0][1]:
+                return False
+            # check if card comes before discards
+            if new_card[2] == discards[0][2]-1:
+                discards.insert(0, new_card)
+                return True
+            # check if card comes after discards
+            if new_card[2] == discards[len(discards)-1][2]+1:
+                discards.append(new_card)
+                return True
+
+            return False
+
     # moves the cards from hand and draws discards after a turn
     def _endTurn(self, pid, post_turn_data):
         if post_turn_data['yaniv']:
@@ -57,20 +91,28 @@ class Server:
             return
         
         # if chosen, draw card from deck
+        self.lucky_draw = False
         if post_turn_data['pick_up_idx'] == 0:
             new_card = self.deck.drawCard()
-            self.last_pick_up = ["D", "D", 0]
+            # check for lucky draw
+            self.lucky_draw = self._isLuckyDraw(post_turn_data['discards'], new_card)
+            if self.lucky_draw:
+                self.last_pick_up = new_card
+            else:
+                self.last_pick_up = ["D", "D", 0]
         # else draw top discard card
         else:
             new_card = self.deck.drawDiscard(post_turn_data['pick_up_idx'])
             self.last_pick_up = new_card
 
-        self._insertCard(pid, new_card)
+        if not self.lucky_draw:
+            self._insertCard(pid, new_card)
 
         # get rid of client's discards
         self.deck.discardCards(post_turn_data['discards'])
         for discard in post_turn_data['discards']:
-            self.players[pid]['hand'].remove(discard)
+            if self.players[pid]['hand'].count(discard): 
+                self.players[pid]['hand'].remove(discard)
 
     def _humanTurn(self, pid):
         server = self.players[pid]['server']
@@ -111,6 +153,7 @@ class Server:
         update_data = {}
         update_data['yaniv'] = yaniv
         update_data['hand_sums'] = hand_sums
+        update_data['lucky_draw'] = self.lucky_draw
         update_data['last_pick_up'] = self.last_pick_up
         update_data['cur_pid'] = pid
         # make a deep copy and remove connection info before serializing
