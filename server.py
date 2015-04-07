@@ -303,8 +303,20 @@ class Server:
             for pid,player in enumerate(self.players):
                 # reset player hand
                 player['hand'] = []
-                for i in range(5):
-                    dealt_card = self.deck.drawCard()
+                if player['ai']:
+                    for i in range(5):
+                        dealt_card = self.deck.drawCard()
+                        self._insertCard(pid, dealt_card)
+                else: # FOR TESTING
+                    dealt_card = self.deck.drawSpecificCard(["2", "d", 2])
+                    self._insertCard(pid, dealt_card)
+                    dealt_card = self.deck.drawSpecificCard(["3", "d", 3])
+                    self._insertCard(pid, dealt_card)
+                    dealt_card = self.deck.drawSpecificCard(["4", "d", 4])
+                    self._insertCard(pid, dealt_card)
+                    dealt_card = self.deck.drawSpecificCard(["5", "d", 5])
+                    self._insertCard(pid, dealt_card)
+                    dealt_card = self.deck.drawSpecificCard(["6", "d", 6])
                     self._insertCard(pid, dealt_card)
             logger.write(self.players)
             # break

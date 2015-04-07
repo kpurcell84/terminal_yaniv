@@ -4,8 +4,8 @@
 
 ### TODO:
 - Get multiplayer with more than one human to work
-- Implement straight flushes
-- Implement lucky draw
+- Investigate screen flicker
+- Add end game screen 
 - Implement medium ai
 - Implement hard ai
 - Add ability to save a game
