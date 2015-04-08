@@ -18,7 +18,7 @@ class Server:
     server = None
     host_ip = ""
     num_humans = 0
-    ai_think_secs = 2
+    ai_think_secs = 1
 
     score_max = 200
     deck = None
@@ -347,6 +347,11 @@ class Server:
                         continue
                     else:
                         first_turn = False
+
+                    if len(player['hand']) == 0:
+                        self.yaniv = True
+                        self.yaniv_pid = pid
+                        break
 
                     self._sendUpdate(pid)
                     
