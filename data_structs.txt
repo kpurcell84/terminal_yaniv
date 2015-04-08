@@ -30,6 +30,7 @@ update_data = {}
 	card last_pick_up
 	bool lucky_draw
 	bool yaniv
+	bool gameover
 	int[] hand_sums
 
 game_data = {}

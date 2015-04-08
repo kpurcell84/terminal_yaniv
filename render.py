@@ -12,7 +12,7 @@ class RenderUI:
     stdscr = None
     hand = None
     suits = {'d':"Diamonds", 'h':"Hearts", 's':"Spades", 'c':"Clubs"}
-    round_break = 30 # seconds to wait between rounds
+    round_break = 5 # seconds to wait between rounds
     # window variables
     left_margin = 5
     top_margin = 0
@@ -292,7 +292,7 @@ class RenderUI:
 
         self.renderMessage(message)
 
-    def _displayYaniv(self, update_data):
+    def _displayYaniv(self, stdscr, update_data):
         # get rid of all cards and messages
         self._eraseCards(True)
         self._eraseCards(False)
@@ -301,7 +301,7 @@ class RenderUI:
         cur_pid = update_data['cur_pid']
         yaniv_name = update_data['players'][cur_pid]['name']
             
-        self.yaniv_win.addstr(1,1, yaniv_name + " has called Yaniv!")
+        self.yaniv_win.addstr(1,0, yaniv_name + " has called Yaniv!")
         points_str = ""
         for pid,player in enumerate(update_data['players']):
             points_str += player['name'] + " finished with: "
@@ -309,18 +309,67 @@ class RenderUI:
                 points_str += card[0] + " "
             points_str += "for a total of " + str(update_data['hand_sums'][pid]) + " points\n"
         logger.write(points_str)
-        self.yaniv_win.addstr(3,1, points_str)
+        self.yaniv_win.addstr(3,0, points_str)
         self.yaniv_win.refresh()
 
         # display a countdown timer until the next round
         timer = self.round_break
-        self.yaniv_win.addstr(self.yaniv_height-1, 1, "Next round starts in: ")
+        self.yaniv_win.addstr(self.yaniv_height-1, 1, "Continue in: ")
         while timer>0:
-            self.yaniv_win.addstr(self.yaniv_height-1, 23, "   ")
-            self.yaniv_win.addstr(self.yaniv_height-1, 23, str(timer))
+            self.yaniv_win.addstr(self.yaniv_height-1, 13, "   ")
+            self.yaniv_win.addstr(self.yaniv_height-1, 13, str(timer))
             self.yaniv_win.refresh()
             time.sleep(1)
             timer -= 1
+        self.yaniv_win.erase()
+        self.yaniv_win.refresh()
+
+    def _displayGameOver(self, stdscr, update_data):
+        # get rid of all cards and messages
+        self._eraseCards(True)
+        self._eraseCards(False)
+        self.renderMessage("")
+
+        # find winners
+        winners = []
+        lowest_score = -1
+        for player in update_data['players']:
+            if lowest_score == -1:
+                lowest_score = player['score']
+                winners.append(player)
+            elif player['score'] == lowest_score:
+                winners.append(player)
+            elif player['score'] < lowest_score:
+                lowest_score = player['score']
+                winners = []
+                winners.append(player)
+
+        message = ""
+        if len(winners) == 1:
+            message += winners[0]['name'] + " has won the game with " + \
+                        str(winners[0]['score']) + " points and " + \
+                        str(winners[0]['yaniv_count']) + " yaniv"
+            if winners[0]['yaniv_count'] == 0 or winners[0]['yaniv_count'] > 1:
+                message += "s"
+        # multiple winners case
+        else:
+            for winner in winners:
+                message += winner['name'] + " and "
+            # get rid of last and
+            message = message[:-5]
+            message += " have tied for the win with " + \
+                        str(winners[0]['score']) + "points"
+        message += "\n\n\n\nPress q to quit"
+
+        self.yaniv_win.addstr(1,0, message)
+        self.yaniv_win.refresh()
+
+        # wait for user to press q to exit
+        while 1:
+            c = stdscr.getch()
+            if c == ord('q'):
+                break
+
         self.yaniv_win.erase()
         self.yaniv_win.refresh()
 
@@ -343,7 +392,9 @@ class RenderUI:
         self._displayStats(update_data['players'], update_data['cur_pid'])
 
         if update_data['yaniv']:
-            self._displayYaniv(update_data)
+            curses.wrapper(self._displayYaniv, update_data)
+        elif update_data['gameover']:
+            curses.wrapper(self._displayGameOver, update_data)
         else:
             self.renderDiscards(update_data['last_discards'])
             self._displayTurnMessage(update_data)

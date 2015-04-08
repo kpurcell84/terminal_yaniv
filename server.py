@@ -18,7 +18,7 @@ class Server:
     server = None
     host_ip = ""
     num_humans = 0
-    ai_think_secs = 2
+    ai_think_secs = 0
 
     score_max = 200
     deck = None
@@ -149,9 +149,10 @@ class Server:
         self._endTurn(pid, post_turn_data)
 
     # update all the human players as to what's going on
-    def _sendUpdate(self, pid, yaniv=False, hand_sums=None):
+    def _sendUpdate(self, pid, yaniv=False, gameover=False, hand_sums=None):
         update_data = {}
         update_data['yaniv'] = yaniv
+        update_data['gameover'] = gameover
         update_data['hand_sums'] = hand_sums
         update_data['lucky_draw'] = self.lucky_draw
         update_data['last_pick_up'] = self.last_pick_up
@@ -196,6 +197,7 @@ class Server:
         for pid,player in enumerate(self.players):
             # check if player won and don't add any points
             if winners.count(pid) == 1:
+                player['yaniv_count'] += 1
                 continue
             # player called yaniv and lost
             if pid == self.yaniv_pid:
@@ -209,7 +211,7 @@ class Server:
         self._sendUpdate(self.yaniv_pid, yaniv=True, hand_sums=hand_sums)
 
     # optional command line args:
-    #   ./server.py [port] [num_humans]
+    #   ./server.py [port] [num_humans] [score_max]
     def configureServer(self):
         # get port number
         while 1:
@@ -238,6 +240,19 @@ class Server:
                     break
             except ValueError:
                 print "Enter a valid number (1-8)"
+
+        # get max score
+        while 1:
+            if len(sys.argv) >= 4:
+                score_max = sys.argv[3]
+            else:
+                score_max = raw_input("What would you like the max score to be: ")
+            try:
+                score_max = int(score_max)
+                self.score_max = score_max
+                break
+            except ValueError:
+                print "Enter a valid number"
 
         self.host_ip = self._get_ip("wlan0")
         self.server = jsocket.JsonServer(port=self.port, address=self.host_ip)
@@ -303,21 +318,21 @@ class Server:
             for pid,player in enumerate(self.players):
                 # reset player hand
                 player['hand'] = []
-                if player['ai']:
-                    for i in range(5):
-                        dealt_card = self.deck.drawCard()
-                        self._insertCard(pid, dealt_card)
-                else: # FOR TESTING
-                    dealt_card = self.deck.drawSpecificCard(["2", "d", 2])
+                # if player['ai']:
+                for i in range(5):
+                    dealt_card = self.deck.drawCard()
                     self._insertCard(pid, dealt_card)
-                    dealt_card = self.deck.drawSpecificCard(["3", "d", 3])
-                    self._insertCard(pid, dealt_card)
-                    dealt_card = self.deck.drawSpecificCard(["4", "d", 4])
-                    self._insertCard(pid, dealt_card)
-                    dealt_card = self.deck.drawSpecificCard(["5", "d", 5])
-                    self._insertCard(pid, dealt_card)
-                    dealt_card = self.deck.drawSpecificCard(["6", "d", 6])
-                    self._insertCard(pid, dealt_card)
+                # else: # FOR TESTING
+                #     dealt_card = self.deck.drawSpecificCard(["2", "d", 2])
+                #     self._insertCard(pid, dealt_card)
+                #     dealt_card = self.deck.drawSpecificCard(["3", "d", 3])
+                #     self._insertCard(pid, dealt_card)
+                #     dealt_card = self.deck.drawSpecificCard(["4", "d", 4])
+                #     self._insertCard(pid, dealt_card)
+                #     dealt_card = self.deck.drawSpecificCard(["5", "d", 5])
+                #     self._insertCard(pid, dealt_card)
+                #     dealt_card = self.deck.drawSpecificCard(["6", "d", 6])
+                #     self._insertCard(pid, dealt_card)
             logger.write(self.players)
             # break
             # round loop
@@ -336,6 +351,8 @@ class Server:
                 if self.yaniv:    
                     break
             self._addRoundScores()
+
+        self._sendUpdate(0, gameover=True)
 
 
 if __name__=='__main__':

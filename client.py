@@ -76,6 +76,9 @@ class Client:
             update_data = self.client.read_obj()
             self.ui.renderUpdate(update_data)
 
+            if update_data['gameover']:
+                break
+
             cur_pid = update_data['cur_pid']
             cur_name = update_data['players'][cur_pid]['name']
             if cur_name != self.name or update_data['yaniv']:
