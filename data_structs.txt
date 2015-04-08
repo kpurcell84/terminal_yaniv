@@ -35,6 +35,7 @@ update_data = {}
 
 game_data = {}
 	int score_max
+	int round_break
 
 name_data = {}
 	string name

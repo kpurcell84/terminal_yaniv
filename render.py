@@ -12,7 +12,7 @@ class RenderUI:
     stdscr = None
     hand = None
     suits = {'d':"Diamonds", 'h':"Hearts", 's':"Spades", 'c':"Clubs"}
-    round_break = 30 # seconds to wait between rounds
+    round_break = 0 # seconds to wait between rounds
     # window variables
     left_margin = 5
     top_margin = 0
@@ -34,7 +34,8 @@ class RenderUI:
     message_win = None
     yaniv_win = None
     
-    def __init__(self, score_max):
+    def __init__(self, score_max, round_break):
+        self.round_break = round_break
         return curses.wrapper(self.__init__helper, score_max)
 
     def __init__helper(self, stdscr, score_max):

@@ -69,14 +69,15 @@ class Client:
         print "Waiting for other players..."
         game_data = self.client.read_obj()
         self.score_max = game_data['score_max']
+        self.round_break = game_data['round_break']
 
     def playGame(self):
-        self.ui = RenderUI(self.score_max)
+        self.ui = RenderUI(self.score_max, self.round_break)
         while 1:
             # receive updates from server
             update_data = self.client.read_obj()
             self.ui.renderUpdate(update_data)
-
+            
             if update_data['gameover']:
                 break
 

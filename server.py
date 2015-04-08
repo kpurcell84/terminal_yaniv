@@ -19,11 +19,13 @@ class Server:
     host_ip = ""
     num_humans = 0
     ai_think_secs = 1
+    round_break = 30
 
     score_max = 200
     deck = None
     yaniv = False
     yaniv_pid = 0
+    winner_pid = 0
     players = []
     last_pick_up = None
     lucky_draw = False
@@ -195,6 +197,7 @@ class Server:
         # remove winner if tied and called yaniv
         if len(winners) > 1 and winners.count(self.yaniv_pid) == 1:
             winners.remove(self.yaniv_pid)
+        self.winner_pid = winners[0]
 
         # add points
         for pid,player in enumerate(self.players):
@@ -212,6 +215,7 @@ class Server:
                 player['score'] /= 2
 
         self._sendUpdate(self.yaniv_pid, yaniv=True, hand_sums=hand_sums)
+        time.sleep(self.round_break)
 
     # optional command line args:
     #   ./server.py [port] [num_humans] [score_max]
@@ -306,7 +310,7 @@ class Server:
             self.players.append(player)
 
         # send game initialization data over
-        game_data = {'score_max':self.score_max}
+        game_data = {'score_max':self.score_max,'round_break':self.round_break}
         for player in self.players:
             if not player['ai']:
                 player['server'].send_obj(game_data)
@@ -343,11 +347,11 @@ class Server:
             first_turn = True
             while 1:
                 for pid,player in enumerate(self.players):
-                    if first_turn and pid != self.yaniv_pid:
+                    if first_turn and pid != self.winner_pid:
                         continue
                     else:
                         first_turn = False
-
+                    # automatic yaniv call for empty hand
                     if len(player['hand']) == 0:
                         self.yaniv = True
                         self.yaniv_pid = pid

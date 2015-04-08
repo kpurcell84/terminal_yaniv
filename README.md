@@ -4,7 +4,7 @@
 
 ### TODO:
 - Log more useful stuff
-- Implement first turn going to last yaniv
+- Get cards to display before it's your turn
 - Write better documentation for running
 - Get multiplayer with more than one human to work
 - Investigate screen flicker
