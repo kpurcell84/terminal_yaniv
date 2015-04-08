@@ -34,7 +34,7 @@ update_data = {}
 	int[] hand_sums
 
 game_data = {}
-	int num_players
+	int score_max
 
 name_data = {}
 	string name

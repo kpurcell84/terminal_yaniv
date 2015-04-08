@@ -303,7 +303,7 @@ class Server:
             self.players.append(player)
 
         # send game initialization data over
-        game_data = {'num_players':len(self.players)}
+        game_data = {'score_max':self.score_max}
         for player in self.players:
             if not player['ai']:
                 player['server'].send_obj(game_data)

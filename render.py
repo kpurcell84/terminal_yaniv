@@ -34,16 +34,18 @@ class RenderUI:
     message_win = None
     yaniv_win = None
     
-    def __init__(self):
-        return curses.wrapper(self.__init__helper)
+    def __init__(self, score_max):
+        return curses.wrapper(self.__init__helper, score_max)
 
-    def __init__helper(self, stdscr):
+    def __init__helper(self, stdscr, score_max):
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
         stdscr.bkgd(' ', curses.color_pair(1))
         stdscr.clear()
         curses.curs_set(0)
         stdscr.refresh()
         self.stdscr = stdscr
+
+        stdscr.addstr(1,70, "Maximum Score: "+str(score_max)+" points")
 
         # build windows from top down
         self.stats_outer_win = curses.newwin(self.stats_height, self.stats_width, self.top_margin, self.left_margin)
