@@ -12,7 +12,7 @@ class RenderUI:
     stdscr = None
     hand = None
     suits = {'d':"Diamonds", 'h':"Hearts", 's':"Spades", 'c':"Clubs"}
-    round_break = 5 # seconds to wait between rounds
+    round_break = 30 # seconds to wait between rounds
     # window variables
     left_margin = 5
     top_margin = 0
@@ -318,8 +318,8 @@ class RenderUI:
         timer = self.round_break
         self.yaniv_win.addstr(self.yaniv_height-1, 1, "Continue in: ")
         while timer>0:
-            self.yaniv_win.addstr(self.yaniv_height-1, 13, "   ")
-            self.yaniv_win.addstr(self.yaniv_height-1, 13, str(timer))
+            self.yaniv_win.addstr(self.yaniv_height-1, 14, "   ")
+            self.yaniv_win.addstr(self.yaniv_height-1, 14, str(timer))
             self.yaniv_win.refresh()
             time.sleep(1)
             timer -= 1
@@ -360,7 +360,7 @@ class RenderUI:
             # get rid of last and
             message = message[:-5]
             message += " have tied for the win with " + \
-                        str(winners[0]['score']) + "points"
+                        str(winners[0]['score']) + " points"
         message += "\n\n\n\nPress q to quit"
 
         self.yaniv_win.addstr(1,0, message)

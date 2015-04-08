@@ -18,12 +18,12 @@ class Server:
     server = None
     host_ip = ""
     num_humans = 0
-    ai_think_secs = 0
+    ai_think_secs = 2
 
     score_max = 200
     deck = None
     yaniv = False
-    yaniv_pid = -1
+    yaniv_pid = 0
     players = []
     last_pick_up = None
     lucky_draw = False
@@ -192,6 +192,9 @@ class Server:
                 winners.append(pid)
 
             hand_sums.append(hand_sum)
+        # remove winner if tied and called yaniv
+        if len(winners) > 1 and winners.count(self.yaniv_pid) == 1:
+            winners.remove(self.yaniv_pid)
 
         # add points
         for pid,player in enumerate(self.players):
@@ -318,27 +321,33 @@ class Server:
             for pid,player in enumerate(self.players):
                 # reset player hand
                 player['hand'] = []
-                # if player['ai']:
-                for i in range(5):
-                    dealt_card = self.deck.drawCard()
+                if player['ai']:
+                    for i in range(5):
+                        dealt_card = self.deck.drawCard()
+                        self._insertCard(pid, dealt_card)
+                else: # FOR TESTING
+                    # dealt_card = self.deck.drawSpecificCard(["2", "d", 2])
+                    # self._insertCard(pid, dealt_card)
+                    # dealt_card = self.deck.drawSpecificCard(["3", "d", 3])
+                    # self._insertCard(pid, dealt_card)
+                    dealt_card = self.deck.drawSpecificCard(["4", "d", 4])
                     self._insertCard(pid, dealt_card)
-                # else: # FOR TESTING
-                #     dealt_card = self.deck.drawSpecificCard(["2", "d", 2])
-                #     self._insertCard(pid, dealt_card)
-                #     dealt_card = self.deck.drawSpecificCard(["3", "d", 3])
-                #     self._insertCard(pid, dealt_card)
-                #     dealt_card = self.deck.drawSpecificCard(["4", "d", 4])
-                #     self._insertCard(pid, dealt_card)
-                #     dealt_card = self.deck.drawSpecificCard(["5", "d", 5])
-                #     self._insertCard(pid, dealt_card)
-                #     dealt_card = self.deck.drawSpecificCard(["6", "d", 6])
-                #     self._insertCard(pid, dealt_card)
+                    # dealt_card = self.deck.drawSpecificCard(["5", "d", 5])
+                    # self._insertCard(pid, dealt_card)
+                    # dealt_card = self.deck.drawSpecificCard(["6", "d", 6])
+                    # self._insertCard(pid, dealt_card)
             logger.write(self.players)
-            # break
+            
             # round loop
             self.yaniv = False
+            first_turn = True
             while 1:
                 for pid,player in enumerate(self.players):
+                    if first_turn and pid != self.yaniv_pid:
+                        continue
+                    else:
+                        first_turn = False
+
                     self._sendUpdate(pid)
                     
                     if player['ai']:
