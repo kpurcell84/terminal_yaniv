@@ -8,17 +8,12 @@ import logger
 def makeDecision(deck, players, pid):
     if players[pid]['ai'] == 1:
         return easyAi(deck, players, pid)
-    # elif players[pid]['ai'] == 2:
-    #     return mediumAi(deck, players, pid)
-    # elif players[pid]['ai'] == 3:
-    #     return hardAi(deck, players, pid)
+    elif players[pid]['ai'] == 2:
+        return mediumAi(deck, players, pid)
+    elif players[pid]['ai'] == 3:
+        return hardAi(deck, players, pid)
 
 def easyAi(deck, players, pid):
-    logger.write("ai last discards")
-    logger.write(deck.getLastDiscards())
-    logger.write("ai hand")
-    logger.write(players[pid]['hand'])
-
     # call yaniv if hand sum 5 or under
     hand_sum = 0
     yaniv = True
@@ -72,14 +67,10 @@ def easyAi(deck, players, pid):
 
     post_turn_data = {'yaniv':False, 'discards':biggest_set, 'pick_up_idx':pick_up_idx}
 
-    logger.write("ai discards")
-    logger.write(biggest_set)
-    logger.write("ai pick_up_idx:" + str(pick_up_idx))
-
     return post_turn_data
 
 def mediumAi(deck, players, pid):
-    pass
+    return easyAi(deck, players, pid)
 
 def hardAi(deck, players, pid):
-    pass
+    return easyAi(deck, players, pid)

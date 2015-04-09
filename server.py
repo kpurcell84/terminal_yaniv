@@ -107,6 +107,9 @@ class Server:
             new_card = self.deck.drawDiscard(post_turn_data['pick_up_idx'])
             self.last_pick_up = new_card
 
+        logger.write("Player discards:\n"+self._cardsString(post_turn_data['discards']))
+        logger.write("Player picks up:\n"+new_card[0]+new_card[1])
+
         if not self.lucky_draw:
             self._insertCard(pid, new_card)
 
@@ -123,16 +126,14 @@ class Server:
         pre_turn_data = {}
         pre_turn_data['hand'] = self.players[pid]['hand']
         pre_turn_data['last_discards'] = self.deck.getLastDiscards()
-        print "pre_turn_data:"
-        print pre_turn_data
-        print ""
+
+        logger.write("Last discards:\n"+self._cardsString(pre_turn_data['last_discards']))
+        logger.write("Pre-turn hand:\n"+self._cardsString(pre_turn_data['hand']))
+
         server.send_obj(pre_turn_data)
 
         # wait for client to make a decision
         post_turn_data = server.read_obj()
-        print "post_turn_data:"
-        print post_turn_data
-        print ""
 
         self._endTurn(pid, post_turn_data)
 
@@ -145,6 +146,9 @@ class Server:
     def _aiTurn(self, pid):
         # thinking.....
         time.sleep(self.ai_think_secs)
+
+        logger.write("Last discards:\n"+self._cardsString(self.deck.getLastDiscards()))
+        logger.write("Pre-turn hand:\n"+self._cardsString(self.players[pid]['hand']))
 
         post_turn_data = ai.makeDecision(self.deck, self.players, pid)
 
@@ -217,6 +221,26 @@ class Server:
         self._sendUpdate(self.yaniv_pid, yaniv=True, hand_sums=hand_sums)
         time.sleep(self.round_break)
 
+    # for logging/debugging purposes
+    def _playersString(self):
+        string = ""
+        for player in self.players:
+            string += str(player['pid'])+" "+player['name']+" | score:"+\
+                      str(player['score'])+" yaniv_count:"+\
+                      str(player['yaniv_count'])+" ai:"+str(player['ai'])+"\n"
+            string += "\tHand:"
+            for card in player['hand']:
+                string += " "+card[0]+card[1]
+            string += "\n"
+        return string
+
+     # for logging/debugging purposes
+    def _cardsString(self, cards):
+        string = ""
+        for card in cards:
+            string += card[0]+card[1]+" "
+        return string
+
     # optional command line args:
     #   ./server.py [port] [num_humans] [score_max]
     def configureServer(self):
@@ -265,6 +289,10 @@ class Server:
         self.server = jsocket.JsonServer(port=self.port, address=self.host_ip)
         print "Hosting server on " + self.host_ip + ":" + str(self.port)
 
+        logger.write("Server launched on "+self.host_ip+":"+str(self.port)+ \
+                    " with "+str(self.num_humans)+" humans and "+ \
+                    str(self.score_max)+" points")
+
     def getPlayers(self): 
         # wait for a single player
         print "Waiting for players..."
@@ -284,7 +312,9 @@ class Server:
                     print "Repeat name"
                     self.server.send_obj({'name':"Repeat"})
 
-            print name_data['name'] + " has joined" 
+            print name_data['name'] + " has joined"
+            logger.write(name_data['name'] + " has joined")
+
             player = {}
             player['pid'] = 0
             player['name'] = name_data['name']
@@ -317,7 +347,10 @@ class Server:
 
     def driver(self):
         # game loop
+        round_count = 0
         while self._checkWin() == False:
+            round_count += 1
+            logger.write("Start of round "+str(round_count))
             # reset the deck
             self.deck = Deck()
 
@@ -340,17 +373,20 @@ class Server:
                     # self._insertCard(pid, dealt_card)
                     # dealt_card = self.deck.drawSpecificCard(["6", "d", 6])
                     # self._insertCard(pid, dealt_card)
-            logger.write(self.players)
+            logger.write("Initial players:\n"+self._playersString())
             
             # round loop
             self.yaniv = False
             first_turn = True
+            turn_count = 0
             while 1:
+                turn_count += 1
                 for pid,player in enumerate(self.players):
                     if first_turn and pid != self.winner_pid:
                         continue
                     else:
                         first_turn = False
+                    logger.write(player['name']+"'s turn")
                     # automatic yaniv call for empty hand
                     if len(player['hand']) == 0:
                         self.yaniv = True
@@ -363,7 +399,9 @@ class Server:
                         self._aiTurn(pid)
                     else:
                         self._humanTurn(pid)
-                    
+
+                    logger.write("Players after turn "+str(turn_count)+"\n"+\
+                                 self._playersString())
                     if self.yaniv:
                         break
                 if self.yaniv:    
@@ -377,5 +415,4 @@ if __name__=='__main__':
     server = Server()
     server.configureServer()
     server.getPlayers()
-    logger.write("Players initialized")
     server.driver()

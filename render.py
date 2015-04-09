@@ -238,9 +238,6 @@ class RenderUI:
         win.refresh()
 
     def _displayStats(self, players, cur_pid):
-        logger.write(cur_pid)
-        logger.write(players)
-
         self.stats_win.erase()
 
         for pid,player in enumerate(players):
@@ -305,6 +302,7 @@ class RenderUI:
         yaniv_name = update_data['players'][cur_pid]['name']
             
         self.yaniv_win.addstr(1,0, yaniv_name + " has called Yaniv!")
+        logger.write(yaniv_name+" has called Yaniv!")
         points_str = ""
         for pid,player in enumerate(update_data['players']):
             points_str += player['name'] + " finished with: "

@@ -8,7 +8,6 @@
 - Write better documentation for running
 - Get multiplayer with more than one human to work
 - Investigate screen flicker
-- Add end game screen 
 - Implement medium ai
 - Implement hard ai
 - Add ability to save a game
