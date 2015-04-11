@@ -39,3 +39,4 @@ game_data = {}
 
 name_data = {}
 	string name
+	int pid

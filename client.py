@@ -11,6 +11,7 @@ import json
 class Client:
     port = 0
     name = ""
+    pid = 0
     ui = None
     client = None
     server_ip = ""
@@ -58,10 +59,11 @@ class Client:
                 print "Please enter 1-3 letters"
                 self.name = raw_input("Enter your initials: ")
 
-            self.client.send_obj({'name':self.name})
+            self.client.send_obj({'name':self.name,'pid':0})
             name_data = self.client.read_obj()
             if name_data['name'] == self.name:
                 print "Successfully joined"
+                self.pid = name_data['pid']
                 break
             else:
                 print "Those initials are already in use"
@@ -76,7 +78,7 @@ class Client:
         while 1:
             # receive updates from server
             update_data = self.client.read_obj()
-            self.ui.renderUpdate(update_data)
+            self.ui.renderUpdate(self.pid, update_data)
             
             if update_data['gameover']:
                 break
@@ -108,8 +110,10 @@ class Client:
 
             # receive updated data and display
             pre_turn_data = self.client.read_obj()
-            self.ui.renderHand(pre_turn_data['hand'])
-            self.ui.renderDiscards(pre_turn_data['last_discards'])
+            # self.ui.renderHand(pre_turn_data['hand'])
+            # self.ui.renderDiscards(pre_turn_data['last_discards'])
+
+        self.client.close()
 
 
 if __name__=='__main__':

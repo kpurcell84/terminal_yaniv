@@ -389,7 +389,7 @@ class RenderUI:
         self.message_win.addstr(0, 0, str(message))
         self.message_win.refresh()
 
-    def renderUpdate(self, update_data):
+    def renderUpdate(self, pid, update_data):
         self._displayStats(update_data['players'], update_data['cur_pid'])
 
         if update_data['yaniv']:
@@ -397,6 +397,7 @@ class RenderUI:
         elif update_data['gameover']:
             curses.wrapper(self._displayGameOver, update_data)
         else:
+            self.renderHand(update_data['players'][pid]['hand'])
             self.renderDiscards(update_data['last_discards'])
             self._displayTurnMessage(update_data)
 

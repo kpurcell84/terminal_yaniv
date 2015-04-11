@@ -3,7 +3,6 @@
 `pip install -r requirements.txt`
 
 ### TODO:
-- Log more useful stuff
 - Get cards to display before it's your turn
 - Write better documentation for running
 - Get multiplayer with more than one human to work

@@ -316,7 +316,7 @@ class Server:
             logger.write(name_data['name'] + " has joined")
 
             player = {}
-            player['pid'] = 0
+            player['pid'] = humans_joined
             player['name'] = name_data['name']
             player['score'] = 0
             player['yaniv_count'] = 0
@@ -324,6 +324,7 @@ class Server:
             player['ai'] = 0
             player['server'] = self.server
             self.players.append(player)
+            name_data['pid'] = player['pid']
             # respond to client with name
             self.server.send_obj(name_data)
             humans_joined += 1
