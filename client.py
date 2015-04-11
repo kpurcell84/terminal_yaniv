@@ -108,11 +108,6 @@ class Client:
                 post_turn_data['yaniv'] = False
                 self.client.send_obj(post_turn_data)
 
-            # receive updated data and display
-            pre_turn_data = self.client.read_obj()
-            # self.ui.renderHand(pre_turn_data['hand'])
-            # self.ui.renderDiscards(pre_turn_data['last_discards'])
-
         self.client.close()
 
 

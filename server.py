@@ -136,12 +136,6 @@ class Server:
         post_turn_data = server.read_obj()
 
         self._endTurn(pid, post_turn_data)
-
-        # send client back new hand
-        pre_turn_data = {}
-        pre_turn_data['hand'] = self.players[pid]['hand']
-        pre_turn_data['last_discards'] = self.deck.getLastDiscards()
-        server.send_obj(pre_turn_data)
         
     def _aiTurn(self, pid):
         # thinking.....
