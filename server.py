@@ -4,7 +4,6 @@ from deck import Deck
 import ai
 import logger
 import jsocket
-import tserver
 
 import socket
 import fcntl
@@ -14,30 +13,17 @@ import time
 import json
 from copy import deepcopy
 
-class FactoryThread(tserver.ServerFactoryThread):
-    # This is an example factory thread, which the server factory will
-    # instantiate for each new connection.
-    def __init__(self):
-            super(FactoryThread, self).__init__()
-            self.timeout = 2.0
-    
-    def _process_message(self, obj):
-        # virtual method - Implementer must define protocol
-        if obj != '':
-            if obj['message'] == "new connection":
-                print "new connection"
-            else:
-                print obj
-
 class Server:
-    port = 0
     server = None
-    host_ip = ""
-    num_humans = 0
-    ai_think_secs = 1
+    host_ip = "127.0.0.1"
+    port = 50005
+    num_humans = 1
+    num_ai = 7
+    ai_level = 1
+    ai_think_secs = 3
     round_break = 30
-
     score_max = 200
+
     deck = None
     yaniv = False
     yaniv_pid = 0
@@ -136,8 +122,6 @@ class Server:
                 self.players[pid]['hand'].remove(discard)
 
     def _humanTurn(self, pid):
-        # server = self.players[pid]['server']
-
         # send pre turn data to client
         pre_turn_data = {}
         pre_turn_data['hand'] = self.players[pid]['hand']
@@ -148,11 +132,9 @@ class Server:
 
         self.server.conn = self.players[pid]['conn']
         self.server.send_obj(pre_turn_data)
-        # server.send_obj(pre_turn_data)
 
         # wait for client to make a decision
         post_turn_data = self.server.read_obj()
-        # post_turn_data = server.read_obj()
 
         self._endTurn(pid, post_turn_data)
         
@@ -189,7 +171,6 @@ class Server:
             if not player['ai']:
                 self.server.conn = player['conn']
                 self.server.send_obj(update_data)
-                # player['server'].send_obj(update_data)
 
     # check for a winner and add round scores to player's totals
     def _addRoundScores(self):
@@ -260,59 +241,101 @@ class Server:
     # optional command line args:
     #   ./server.py [port] [num_humans] [score_max]
     def configureServer(self):
-        # get port number
-        while 1:
-            if len(sys.argv) >= 2:
-                port = sys.argv[1]
-            else:
-                port = raw_input("Enter an unused port to run the server on: ")
+        # read properly formatted lines in config file into a dic
+        try:
+            config = {}
+            with open("server.config", "r") as config_read: 
+                for option in config_read:
+                    option = option.rstrip('\n')
+                    option = option.split()
+                    if len(option) == 3 and option[1] == '=':
+                        config[option[0]] = option[2]     
+        except IOError:
+            print "Could not open server.config, make sure it exists"
+            sys.exit(1)
+
+        # config variable parsing
+        if 'port' in config:
             try:
-                self.port = int(port)
-                break
+                port = int(config['port'])
+                if port > 0 and port < 65535:
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    result = sock.connect_ex(('127.0.0.1', port))
+                    if result == 0:
+                        # port is open
+                       self.port = port
             except ValueError:
-                print "Enter a valid port number"
-        # get number of human players
-        while 1:
-            if len(sys.argv) >= 3:
-                num_humans = sys.argv[2]
-            else:
-                num_humans = raw_input("How many human players would you like to play with: ")
+                pass
+        if 'host_ip' in config:
             try:
-                num_humans = int(num_humans)
-                if num_humans < 1 or num_humans > 8:
-                    print "Enter a valid number (1-8)"
-                    continue
-                else:
+                self.host_ip = config['host_ip']
+                self.server = jsocket.JsonServer(port=self.port, address=self.host_ip)
+            except:
+                print "host_ip not valid"
+                sys.exit(1)
+        else:
+            try:
+                self.host_ip = self._get_ip("wlan0")
+                self.server = jsocket.JsonServer(port=self.port, address=self.host_ip)
+            except:
+                print "Please enter a host_ip in the server.config file"
+                sys.exit(1)
+        if 'num_humans' in config:
+            try:
+                num_humans = int(config['num_humans'])
+                if num_humans >= 0 and num_humans <= 8:
                     self.num_humans = num_humans
-                    break
             except ValueError:
-                print "Enter a valid number (1-8)"
-
-        # get max score
-        while 1:
-            if len(sys.argv) >= 4:
-                score_max = sys.argv[3]
-            else:
-                score_max = raw_input("What would you like the max score to be: ")
+                pass
+        if 'num_ai' in config:
             try:
-                score_max = int(score_max)
-                self.score_max = score_max
-                break
+                num_ai = int(config['num_ai'])
+                if num_ai >= 0 and num_ai+self.num_humans <= 8:
+                    self.num_ai = num_ai
             except ValueError:
-                print "Enter a valid number"
-
-        self.host_ip = self._get_ip("wlan0")
-
-        self.server = jsocket.JsonServer(port=self.port, address=self.host_ip)
-        # self.server = tserver.ServerFactory(FactoryThread)
-        # self.server.port = self.port
-        # self.server.address = self.host_ip
-        # self.server.start()
+                pass
+        if 'ai_level' in config:
+            try:
+                ai_level = int(config['ai_level'])
+                if ai_level > 0 and ai_level <= 3:
+                    self.ai_level = ai_level
+            except ValueError:
+                pass
+        if 'ai_think_secs' in config:
+            try:
+                ai_think_secs = int(config['ai_think_secs'])
+                if ai_think_secs > 0:
+                    self.ai_think_secs = ai_think_secs
+            except ValueError:
+                pass
+        if 'round_break' in config:
+            try:
+                round_break = int(config['round_break'])
+                if round_break > 0:
+                    self.round_break = round_break
+            except ValueError:
+                pass
+        if 'score_max' in config:
+            try:
+                score_max = int(config['score_max'])
+                if score_max > 0:
+                    self.score_max = score_max
+            except ValueError:
+                pass
+        
+        config_str = "Config options:\n"
+        config_str += "\thost_ip = " + self.host_ip + "\n"\
+                      "\tport = " + str(self.port) + "\n"\
+                      "\tnum_humans = " + str(self.num_humans) + "\n"\
+                      "\tnum_ai = " + str(self.num_ai) + "\n"\
+                      "\tai_level = " + str(self.ai_level) + "\n"\
+                      "\tai_think_secs = " + str(self.ai_think_secs) + "\n"\
+                      "\tround_break = " + str(self.round_break) + "\n"\
+                      "\tscore_max = " + str(self.score_max) + "\n"
+        print config_str
         print "Hosting server on " + self.host_ip + ":" + str(self.port)
 
-        logger.write("Server launched on "+self.host_ip+":"+str(self.port)+ \
-                    " with "+str(self.num_humans)+" humans and "+ \
-                    str(self.score_max)+" points")
+        logger.write(config_str)
 
     def getPlayers(self): 
         # wait for a single player
@@ -350,22 +373,21 @@ class Server:
             self.server.send_obj(name_data)
             humans_joined += 1
 
-        # fill in rest of spots with hardcoded ai players
-        for i in range(self.num_humans,8):
+        # fill in rest of spots with ai players
+        for i in range(self.num_humans, self.num_humans+self.num_ai):
             player = {}
             player['pid'] = i
             player['name'] = "ai" + str(i)
             player['score'] = 0
             player['yaniv_count'] = 0
             player['hand'] = []
-            player['ai'] = 1
+            player['ai'] = self.ai_level
             self.players.append(player)
 
         # send game initialization data over
         game_data = {'score_max':self.score_max,'round_break':self.round_break}
         for player in self.players:
             if not player['ai']:
-                # self.player['server'].send_obj(game_data)
                 self.server.conn = player['conn']
                 self.server.send_obj(game_data)
 
@@ -377,7 +399,6 @@ class Server:
             logger.write("Start of round "+str(round_count))
             # reset the deck
             self.deck = Deck()
-
             # deal cards to players
             for pid,player in enumerate(self.players):
                 # reset player hand

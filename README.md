@@ -3,10 +3,11 @@
 `pip install -r requirements.txt`
 
 ### TODO:
+- Add config file to customize options
 - Add ability to choose how many AI
+- Package independent of python
 - Implement double deck for > 4 players
 - Write better documentation for running
-- Get multiplayer with more than one human to work
 - Investigate screen flicker
 - Implement medium ai
 - Implement hard ai
