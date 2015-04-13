@@ -46,7 +46,7 @@ class RenderUI:
         stdscr.refresh()
         self.stdscr = stdscr
 
-        stdscr.addstr(1,70, "Maximum Score: "+str(score_max)+" points")
+        stdscr.addstr(1,58, "Max Score: "+str(score_max)+" points")
 
         # build windows from top down
         self.stats_outer_win = curses.newwin(self.stats_height, self.stats_width, self.top_margin, self.left_margin)

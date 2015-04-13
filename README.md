@@ -3,7 +3,8 @@
 `pip install -r requirements.txt`
 
 ### TODO:
-- Get cards to display before it's your turn
+- Add ability to choose how many AI
+- Implement double deck for > 4 players
 - Write better documentation for running
 - Get multiplayer with more than one human to work
 - Investigate screen flicker
@@ -15,3 +16,4 @@
 ### Ideas:
 - Simulate AI strategies against each other without a client
 - Add timing element to lucky draw
+- Add statistics

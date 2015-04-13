@@ -20,24 +20,12 @@ class Client:
         pass
 
     # optional command line args:
-    #   ./client.py [port] [server_ip]
+    #   ./client.py [server_ip] [port]
     def joinServer(self):
-        # get port number
-        while 1:
-            if len(sys.argv) >= 2:
-                port = sys.argv[1]
-            else:
-                port = raw_input("Enter the server port: ")
-            try:
-                self.port = int(port)
-                break
-            except ValueError:
-                print "Enter a valid port number"
-
         # get server ip address
         while 1:
-            if len(sys.argv) >= 3:
-                server_ip = sys.argv[2]
+            if len(sys.argv) >= 2:
+                server_ip = sys.argv[1]
             else:
                 server_ip = raw_input("Enter the server IP address: ")
             try:
@@ -46,7 +34,18 @@ class Client:
                 break
             except socket.error as msg:
                 print "Enter a valid IP address\n" + str(msg)
-            
+
+        # get port number
+        while 1:
+            if len(sys.argv) >= 3:
+                port = sys.argv[2]
+            else:
+                port = raw_input("Enter the server port: ")
+            try:
+                self.port = int(port)
+                break
+            except ValueError:
+                print "Enter a valid port number"   
 
         # connect to server
         self.client = jsocket.JsonClient(port=self.port, address=self.server_ip)

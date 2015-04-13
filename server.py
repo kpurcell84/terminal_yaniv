@@ -3,15 +3,31 @@
 from deck import Deck
 import ai
 import logger
+import jsocket
+import tserver
 
 import socket
-import jsocket
 import fcntl
 import struct
 import sys
 import time
 import json
 from copy import deepcopy
+
+class FactoryThread(tserver.ServerFactoryThread):
+    # This is an example factory thread, which the server factory will
+    # instantiate for each new connection.
+    def __init__(self):
+            super(FactoryThread, self).__init__()
+            self.timeout = 2.0
+    
+    def _process_message(self, obj):
+        # virtual method - Implementer must define protocol
+        if obj != '':
+            if obj['message'] == "new connection":
+                print "new connection"
+            else:
+                print obj
 
 class Server:
     port = 0
@@ -120,7 +136,7 @@ class Server:
                 self.players[pid]['hand'].remove(discard)
 
     def _humanTurn(self, pid):
-        server = self.players[pid]['server']
+        # server = self.players[pid]['server']
 
         # send pre turn data to client
         pre_turn_data = {}
@@ -130,10 +146,13 @@ class Server:
         logger.write("Last discards:\n"+self._cardsString(pre_turn_data['last_discards']))
         logger.write("Pre-turn hand:\n"+self._cardsString(pre_turn_data['hand']))
 
-        server.send_obj(pre_turn_data)
+        self.server.conn = self.players[pid]['conn']
+        self.server.send_obj(pre_turn_data)
+        # server.send_obj(pre_turn_data)
 
         # wait for client to make a decision
-        post_turn_data = server.read_obj()
+        post_turn_data = self.server.read_obj()
+        # post_turn_data = server.read_obj()
 
         self._endTurn(pid, post_turn_data)
         
@@ -160,14 +179,17 @@ class Server:
         # make a deep copy and remove connection info before serializing
         players_copy = deepcopy(self.players)
         for player in players_copy:
-            player.pop('server', None)
+            player.pop('conn', None)
+            # player.pop('server', None)
             
         update_data['players'] = players_copy
         update_data['last_discards'] = self.deck.getLastDiscards()
         # send out updates to everyone
         for player in self.players:
             if not player['ai']:
-                player['server'].send_obj(update_data)
+                self.server.conn = player['conn']
+                self.server.send_obj(update_data)
+                # player['server'].send_obj(update_data)
 
     # check for a winner and add round scores to player's totals
     def _addRoundScores(self):
@@ -280,7 +302,12 @@ class Server:
                 print "Enter a valid number"
 
         self.host_ip = self._get_ip("wlan0")
+
         self.server = jsocket.JsonServer(port=self.port, address=self.host_ip)
+        # self.server = tserver.ServerFactory(FactoryThread)
+        # self.server.port = self.port
+        # self.server.address = self.host_ip
+        # self.server.start()
         print "Hosting server on " + self.host_ip + ":" + str(self.port)
 
         logger.write("Server launched on "+self.host_ip+":"+str(self.port)+ \
@@ -316,7 +343,7 @@ class Server:
             player['yaniv_count'] = 0
             player['hand'] = []
             player['ai'] = 0
-            player['server'] = self.server
+            player['conn'] = self.server.conn
             self.players.append(player)
             name_data['pid'] = player['pid']
             # respond to client with name
@@ -338,7 +365,9 @@ class Server:
         game_data = {'score_max':self.score_max,'round_break':self.round_break}
         for player in self.players:
             if not player['ai']:
-                player['server'].send_obj(game_data)
+                # self.player['server'].send_obj(game_data)
+                self.server.conn = player['conn']
+                self.server.send_obj(game_data)
 
     def driver(self):
         # game loop
@@ -353,17 +382,17 @@ class Server:
             for pid,player in enumerate(self.players):
                 # reset player hand
                 player['hand'] = []
-                if player['ai']:
-                    for i in range(5):
-                        dealt_card = self.deck.drawCard()
-                        self._insertCard(pid, dealt_card)
-                else: # FOR TESTING
+                # if player['ai']:
+                for i in range(5):
+                    dealt_card = self.deck.drawCard()
+                    self._insertCard(pid, dealt_card)
+                # else: # FOR TESTING
                     # dealt_card = self.deck.drawSpecificCard(["2", "d", 2])
                     # self._insertCard(pid, dealt_card)
                     # dealt_card = self.deck.drawSpecificCard(["3", "d", 3])
                     # self._insertCard(pid, dealt_card)
-                    dealt_card = self.deck.drawSpecificCard(["4", "d", 4])
-                    self._insertCard(pid, dealt_card)
+                    # dealt_card = self.deck.drawSpecificCard(["4", "d", 4])
+                    # self._insertCard(pid, dealt_card)
                     # dealt_card = self.deck.drawSpecificCard(["5", "d", 5])
                     # self._insertCard(pid, dealt_card)
                     # dealt_card = self.deck.drawSpecificCard(["6", "d", 6])
@@ -405,9 +434,14 @@ class Server:
 
         self._sendUpdate(0, gameover=True)
 
+    def shutdown(self):
+        self.server.stop()
+        self.server.join()
+
 
 if __name__=='__main__':
     server = Server()
     server.configureServer()
     server.getPlayers()
     server.driver()
+    # server.shutdown()
