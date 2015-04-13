@@ -35152,3 +35152,309 @@ Th
 [Mon 04/13/2015 14:35:40] Pre-turn hand:
 5h 3h 2s 
 
+[Mon 04/13/2015 14:45:45] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 1
+	round_break = 30
+	score_max = 100
+
+
+[Mon 04/13/2015 14:45:54] KJP has joined
+
+[Mon 04/13/2015 14:45:54] Start of round 1
+
+[Mon 04/13/2015 14:45:54] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Qd Qc 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: 8d 6s 5c 5d Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h 2h 2d
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 3c 3s
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Js Tc 8h 8c Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Th 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Kd Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kh 9d 5h 4d
+
+
+[Mon 04/13/2015 14:45:54] KJP's turn
+
+[Mon 04/13/2015 14:45:54] Last discards:
+5s 
+
+[Mon 04/13/2015 14:45:54] Pre-turn hand:
+Qd Qc 9h 7d 4s 
+
+[Mon 04/13/2015 14:46:10] Player discards:
+Qd Qc 
+
+[Mon 04/13/2015 14:46:10] Player picks up:
+Kh
+
+[Mon 04/13/2015 14:46:10] Players after turn 1
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: 8d 6s 5c 5d Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h 2h 2d
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 3c 3s
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Js Tc 8h 8c Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Th 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Kd Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kh 9d 5h 4d
+
+
+[Mon 04/13/2015 14:46:10] ai1's turn
+
+[Mon 04/13/2015 14:46:11] Last discards:
+Qc Qd 
+
+[Mon 04/13/2015 14:46:11] Pre-turn hand:
+8d 6s 5c 5d Ah 
+
+[Mon 04/13/2015 14:46:11] Player discards:
+5c 5d 
+
+[Mon 04/13/2015 14:46:11] Player picks up:
+Qs
+
+[Mon 04/13/2015 14:46:11] Players after turn 1
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Qs 8d 6s Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h 2h 2d
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 3c 3s
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Js Tc 8h 8c Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Th 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Kd Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kh 9d 5h 4d
+
+
+[Mon 04/13/2015 14:46:11] ai2's turn
+
+[Mon 04/13/2015 14:46:12] Last discards:
+5d 5c 
+
+[Mon 04/13/2015 14:46:12] Pre-turn hand:
+Kc 9c 6h 2h 2d 
+
+[Mon 04/13/2015 14:46:12] Player discards:
+2h 2d 
+
+[Mon 04/13/2015 14:46:12] Player picks up:
+Ac
+
+[Mon 04/13/2015 14:46:12] Players after turn 1
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Qs 8d 6s Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h Ac
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 3c 3s
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Js Tc 8h 8c Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Th 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Kd Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kh 9d 5h 4d
+
+
+[Mon 04/13/2015 14:46:12] ai3's turn
+
+[Mon 04/13/2015 14:46:13] Last discards:
+2d 2h 
+
+[Mon 04/13/2015 14:46:13] Pre-turn hand:
+Ks 7c 4c 3c 3s 
+
+[Mon 04/13/2015 14:46:13] Player discards:
+3c 3s 
+
+[Mon 04/13/2015 14:46:13] Player picks up:
+2d
+
+[Mon 04/13/2015 14:46:13] Players after turn 1
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Qs 8d 6s Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h Ac
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 2d
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Js Tc 8h 8c Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Th 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Kd Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kh 9d 5h 4d
+
+
+[Mon 04/13/2015 14:46:13] ai4's turn
+
+[Mon 04/13/2015 14:46:14] Last discards:
+3s 3c 
+
+[Mon 04/13/2015 14:46:14] Pre-turn hand:
+Js Tc 8h 8c Ad 
+
+[Mon 04/13/2015 14:46:14] Player discards:
+8h 8c 
+
+[Mon 04/13/2015 14:46:14] Player picks up:
+Kc
+
+[Mon 04/13/2015 14:46:14] Players after turn 1
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Qs 8d 6s Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h Ac
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 2d
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Js Tc Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Th 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Kd Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kh 9d 5h 4d
+
+
+[Mon 04/13/2015 14:46:14] ai5's turn
+
+[Mon 04/13/2015 14:46:15] Last discards:
+8c 8h 
+
+[Mon 04/13/2015 14:46:15] Pre-turn hand:
+Th 9s 7h 4h 3h 
+
+[Mon 04/13/2015 14:46:15] Player discards:
+Th 
+
+[Mon 04/13/2015 14:46:15] Player picks up:
+Qh
+
+[Mon 04/13/2015 14:46:15] Players after turn 1
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Qs 8d 6s Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h Ac
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 2d
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Js Tc Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Qh 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Kd Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kh 9d 5h 4d
+
+
+[Mon 04/13/2015 14:46:15] ai6's turn
+
+[Mon 04/13/2015 14:46:16] Last discards:
+Th 
+
+[Mon 04/13/2015 14:46:16] Pre-turn hand:
+Ks Kd Jh Jd 3d 
+
+[Mon 04/13/2015 14:46:16] Player discards:
+Ks Kd 
+
+[Mon 04/13/2015 14:46:16] Player picks up:
+Jc
+
+[Mon 04/13/2015 14:46:16] Players after turn 1
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Qs 8d 6s Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h Ac
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 2d
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Js Tc Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Qh 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Jc Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kh 9d 5h 4d
+
+
+[Mon 04/13/2015 14:46:16] ai7's turn
+
+[Mon 04/13/2015 14:46:17] Last discards:
+Kd Ks 
+
+[Mon 04/13/2015 14:46:17] Pre-turn hand:
+Kd Kh 9d 5h 4d 
+
+[Mon 04/13/2015 14:46:17] Player discards:
+9d 
+
+[Mon 04/13/2015 14:46:17] Player picks up:
+Kd
+
+[Mon 04/13/2015 14:46:17] Players after turn 1
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9h 7d 4s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Qs 8d 6s Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 9c 6h Ac
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 7c 4c 2d
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Js Tc Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Qh 9s 7h 4h 3h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Jc Jh Jd 3d
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kd Kh 5h 4d
+
+
+[Mon 04/13/2015 14:46:17] KJP's turn
+
+[Mon 04/13/2015 14:46:17] Last discards:
+9d 
+
+[Mon 04/13/2015 14:46:17] Pre-turn hand:
+Kh 9h 7d 4s 
+

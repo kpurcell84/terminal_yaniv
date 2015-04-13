@@ -4,7 +4,7 @@ import random
 import itertools
 
 class Deck:
-    def __init__(self):
+    def __init__(self, num_players):
         self.cards = []
         self.discards = []
         self.last_discard_num = 1
@@ -20,7 +20,14 @@ class Deck:
                 card_list.append(val)
                 card_list.append(suit)
                 deck_list.append(card_list)
-
+        # use two decks for > 5 players
+        if num_players > 5:
+            for suit in suits:
+                card_list = []
+                card_list.append(val)
+                card_list.append(suit)
+                deck_list.append(card_list)
+                
         for c in deck_list:
             # give it a value for sorting
             sort_val = 0

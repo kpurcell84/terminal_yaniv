@@ -239,7 +239,7 @@ class Server:
         return string
 
     # optional command line args:
-    #   ./server.py [port] [num_humans] [score_max]
+    #   ./server.py
     def configureServer(self):
         # read properly formatted lines in config file into a dic
         try:
@@ -398,7 +398,7 @@ class Server:
             round_count += 1
             logger.write("Start of round "+str(round_count))
             # reset the deck
-            self.deck = Deck()
+            self.deck = Deck(len(self.players))
             # deal cards to players
             for pid,player in enumerate(self.players):
                 # reset player hand
