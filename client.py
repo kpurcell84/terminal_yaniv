@@ -98,11 +98,15 @@ class Client:
                  post_turn_data['yaniv'] = True
                  self.client.send_obj(post_turn_data)
             else:
+                # remove discards from hand for display purposes
+                for card in discards:
+                    pre_turn_data['hand'].remove(card)
+
                 self.ui.renderHand(pre_turn_data['hand'])
-                cur_card = self.ui.chooseDiscards(pre_turn_data['last_discards'])
+                pick_up_idx = self.ui.chooseDiscards(pre_turn_data['last_discards'])
 
                 post_turn_data = {}
-                post_turn_data['pick_up_idx'] = cur_card
+                post_turn_data['pick_up_idx'] = pick_up_idx
                 post_turn_data['discards'] = discards
                 post_turn_data['yaniv'] = False
                 self.client.send_obj(post_turn_data)

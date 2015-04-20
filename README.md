@@ -3,8 +3,7 @@
 `pip install -r requirements.txt`
 
 ### TODO:
-- Package independent of python
-- Implement double deck for > 4 players
+- Make cards disappear after putting them down
 - Write better documentation for running
 - Investigate screen flicker
 - Implement medium ai
@@ -12,7 +11,8 @@
 - Add ability to save a game
 - Add ability to stop and save game if player disconnects
 
-### Ideas:
+### Future Ideas:
 - Simulate AI strategies against each other without a client
 - Add timing element to lucky draw
 - Add statistics
+- Package independent of python
