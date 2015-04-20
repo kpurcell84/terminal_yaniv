@@ -3,7 +3,9 @@
 `pip install -r requirements.txt`
 
 ### TODO:
-- Make cards disappear after putting them down
+- Fix round and turn numbers in logging
+- Add logging for whether or not game was saved
+- Test if saving works
 - Write better documentation for running
 - Investigate screen flicker
 - Implement medium ai

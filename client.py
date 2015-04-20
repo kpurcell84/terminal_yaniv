@@ -64,8 +64,10 @@ class Client:
                 print "Successfully joined"
                 self.pid = name_data['pid']
                 break
-            else:
+            elif name_data['name'] == "Repeat":
                 print "Those initials are already in use"
+            elif name_data['name'] == "Invalid":
+                print "Invalid name, check with server admin"
 
         print "Waiting for other players..."
         game_data = self.client.read_obj()
@@ -101,8 +103,8 @@ class Client:
                 # remove discards from hand for display purposes
                 for card in discards:
                     pre_turn_data['hand'].remove(card)
-
                 self.ui.renderHand(pre_turn_data['hand'])
+
                 pick_up_idx = self.ui.chooseDiscards(pre_turn_data['last_discards'])
 
                 post_turn_data = {}
