@@ -29,7 +29,7 @@ import logging
 import time
 
 logger = logging.getLogger("jsocket")
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 FORMAT = '[%(asctime)-15s][%(levelname)s][%(module)s][%(funcName)s] %(message)s'
 logging.basicConfig(format=FORMAT)
 

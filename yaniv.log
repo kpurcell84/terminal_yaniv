@@ -49099,3 +49099,339 @@ Kh
 [Tue 04/21/2015 11:26:39] Pre-turn hand:
 9c 5c 5d 4h Ah 
 
+[Tue 04/21/2015 11:46:18] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 0
+	round_break = 30
+	score_max = 100
+
+
+[Tue 04/21/2015 11:46:27] KJP has joined
+
+[Tue 04/21/2015 11:46:27] Start of round 1
+
+[Tue 04/21/2015 11:46:27] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kc Qs 8c 5c 2c
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: 8s 7d 7h 6h 2d
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Jc Th 5h 4h 3c
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Kh Js 6s 4c 2h
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Qd 9d 5s 3s
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 8d 7s 6c 3d
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Jd Tc 9s 6d Ad
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Qh Jh Ts 9h 8h
+
+
+[Tue 04/21/2015 11:46:27] KJP's turn
+
+[Tue 04/21/2015 11:46:27] Last discards:
+As 
+
+[Tue 04/21/2015 11:46:27] Pre-turn hand:
+Kc Qs 8c 5c 2c 
+
+[Tue 04/21/2015 11:47:34] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 0
+	round_break = 30
+	score_max = 100
+
+
+[Tue 04/21/2015 11:47:37] KJP has joined
+
+[Tue 04/21/2015 11:47:37] Start of round 1
+
+[Tue 04/21/2015 11:47:37] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kd Kh Ts 3h 3c
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Kh Qs Th 9c 4d
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Qd 8d 6c 2d Ac
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Kc 5s 5c 3s 3d
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Tc Td 7h 6s 5h
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Ks 9h 8c 6h Ah
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Qc 8h 7c 7s 4h
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Qh Jh 4c 2s
+
+
+[Tue 04/21/2015 11:47:37] KJP's turn
+
+[Tue 04/21/2015 11:47:37] Last discards:
+Kc 
+
+[Tue 04/21/2015 11:47:37] Pre-turn hand:
+Kd Kh Ts 3h 3c 
+
+[Tue 04/21/2015 11:49:14] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 0
+	round_break = 30
+	score_max = 100
+
+
+[Tue 04/21/2015 11:49:17] KJP has joined
+
+[Tue 04/21/2015 11:49:17] Start of round 1
+
+[Tue 04/21/2015 11:49:17] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Qs Jc Jd 9d 5s
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Qh Qc 9c 4c
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: 6c 5h 4s 3h 2h
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: 8s 7c 7h 5c 3s
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Th 9s 7s 3d Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Kh 9h 8h 6h Ac
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Qd Js 2d As
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Ks 6s 3c Ah
+
+
+[Tue 04/21/2015 11:49:17] KJP's turn
+
+[Tue 04/21/2015 11:49:17] Last discards:
+2s 
+
+[Tue 04/21/2015 11:49:17] Pre-turn hand:
+Qs Jc Jd 9d 5s 
+
+[Tue 04/21/2015 11:50:09] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 0
+	round_break = 30
+	score_max = 100
+
+
+[Tue 04/21/2015 11:50:11] KJP has joined
+
+[Tue 04/21/2015 11:50:11] Start of round 1
+
+[Tue 04/21/2015 11:50:11] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh 9c 8s 4h 2d
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Kh Kd 9h 3c Ad
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Ts 6c 4c As
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Th 8h 7s 5h 3h
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Qc 9s 7d 6s Ah
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Qs Qh 9d 4s 3d
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Jh 5d 4d Ac
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Kc 7c 6h 2s
+
+
+[Tue 04/21/2015 11:50:11] KJP's turn
+
+[Tue 04/21/2015 11:50:11] Last discards:
+Ks 
+
+[Tue 04/21/2015 11:50:11] Pre-turn hand:
+Kh 9c 8s 4h 2d 
+
+[Tue 04/21/2015 11:50:33] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 0
+	round_break = 30
+	score_max = 100
+
+
+[Tue 04/21/2015 11:50:35] KJP has joined
+
+[Tue 04/21/2015 11:50:35] Start of round 1
+
+[Tue 04/21/2015 11:50:35] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kd Jd Jc Tc As
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: 9s 8d 7s 5c Ac
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Qc Ts 3c 2h Ah
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Qd 9d 5s 4s
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Jh Th 6h 5h 4d
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: 9h 7h 6d 4h 2d
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Td 8s 3d 2c
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Ks Js 6c 3s
+
+
+[Tue 04/21/2015 11:50:35] KJP's turn
+
+[Tue 04/21/2015 11:50:35] Last discards:
+7c 
+
+[Tue 04/21/2015 11:50:35] Pre-turn hand:
+Kd Jd Jc Tc As 
+
+[Tue 04/21/2015 11:50:59] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 0
+	round_break = 30
+	score_max = 100
+
+
+[Tue 04/21/2015 11:51:01] KJP has joined
+
+[Tue 04/21/2015 11:51:01] Start of round 1
+
+[Tue 04/21/2015 11:51:01] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Ks Jd 9h 8s 8c
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Kc Jc 9s 3c
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: 9c 7d 3h 2c Ah
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Qd Tc Ts 7c 2d
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Qc 9d 8d 3s 3d
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Td 7s 4s 4h
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Qs 8h 6h 5c 2s
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Th 6s 6c 4c
+
+
+[Tue 04/21/2015 11:51:01] KJP's turn
+
+[Tue 04/21/2015 11:51:01] Last discards:
+Ac 
+
+[Tue 04/21/2015 11:51:01] Pre-turn hand:
+Ks Jd 9h 8s 8c 
+
+[Tue 04/21/2015 11:51:44] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 0
+	round_break = 30
+	score_max = 100
+
+
+[Tue 04/21/2015 11:51:46] KJP has joined
+
+[Tue 04/21/2015 11:51:46] Start of round 1
+
+[Tue 04/21/2015 11:51:46] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Qc Qd 9s 5s Ad
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Qh 9c 5d 4s 2d
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kc Jc Js 5h 2h
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Kh Jd 6s 2c 2s
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Ks 6d 6c 3d
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Ts 8c 7d 4d 4c
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Tc 8d 7s 3c
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Jh 9h 8h 7h Ah
+
+
+[Tue 04/21/2015 11:51:46] KJP's turn
+
+[Tue 04/21/2015 11:51:46] Last discards:
+As 
+
+[Tue 04/21/2015 11:51:46] Pre-turn hand:
+Qc Qd 9s 5s Ad 
+
+[Tue 04/21/2015 11:56:00] Config options:
+	host_ip = 10.0.0.27
+	port = 50005
+	num_humans = 1
+	num_ai = 7
+	ai_level = 1
+	ai_think_secs = 0
+	round_break = 30
+	score_max = 100
+
+
+[Tue 04/21/2015 11:56:06] KJP has joined
+
+[Tue 04/21/2015 11:56:06] Start of round 1
+
+[Tue 04/21/2015 11:56:06] Initial players:
+0 KJP | score:0 yaniv_count:0 ai:0
+	Hand: Kh Qd Ts 8d 6d
+1 ai1 | score:0 yaniv_count:0 ai:1
+	Hand: Js 5c 5h 2d Ah
+2 ai2 | score:0 yaniv_count:0 ai:1
+	Hand: Kd 9h 9s 8s Ac
+3 ai3 | score:0 yaniv_count:0 ai:1
+	Hand: Ks Qc 7c 2c As
+4 ai4 | score:0 yaniv_count:0 ai:1
+	Hand: 9c 7s 3d 3c Ad
+5 ai5 | score:0 yaniv_count:0 ai:1
+	Hand: Kh 6s 4h 3h 2s
+6 ai6 | score:0 yaniv_count:0 ai:1
+	Hand: Qh Jd Jc 7h 5s
+7 ai7 | score:0 yaniv_count:0 ai:1
+	Hand: Kd Kc Td 8h 4c
+
+
+[Tue 04/21/2015 11:56:06] KJP's turn
+
+[Tue 04/21/2015 11:56:06] Last discards:
+5d 
+
+[Tue 04/21/2015 11:56:06] Pre-turn hand:
+Kh Qd Ts 8d 6d 
+

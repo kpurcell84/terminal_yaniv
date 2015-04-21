@@ -281,24 +281,6 @@ class Server:
 
         pickle.dump(deck_dic, open("game_data/deck.data", "wb"))
 
-        # server = None
-        # host_ip = "127.0.0.1"
-        # port = 50005
-        # num_humans = 1
-        # num_ai = 7
-        # ai_level = 1
-        # ai_think_secs = 3
-        # round_break = 30
-        # score_max = 200
-
-        # deck = None
-        # yaniv = False
-        # yaniv_pid = 0
-        # winner_pid = 0
-        # players = []
-        # last_pick_up = None
-        # lucky_draw = False
-
     def _loadGame(self):
         # load variables
         var_dic = pickle.load(open("game_data/vars.data", "rb"))
@@ -604,4 +586,8 @@ if __name__=='__main__':
     server = Server()
     server.configureServer()
     server.getPlayers()
-    server.driver()
+    try:
+        server.driver()
+    except RuntimeError as error:
+        if error.message == "socket connection broken":
+            print "Player has disconnected, relaunch server to resume game"
