@@ -3,6 +3,9 @@
 `pip install -r requirements.txt`
 
 ### TODO:
+- Get rid of port problem so server can relaunch
+- Test server autoload
+- Add automatic server relaunch on player disconnecting
 - Write better documentation for running
 - Investigate screen flicker
 - Implement medium ai

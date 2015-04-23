@@ -119,4 +119,8 @@ class Client:
 if __name__=='__main__':
     client = Client()
     client.joinServer()
-    client.playGame()
+    try:
+        client.playGame()
+    except socket.error:
+        print "Lost connection to server, player may have disconnected\n \
+               Check with server admin and attempt to rejoin"

@@ -308,7 +308,7 @@ class Server:
         self.deck.discards = deck_dic['discards']
         self.deck.last_discard_num = deck_dic['last_discard_num']
 
-    def configureServer(self):
+    def configureServer(self, autoload=False):
         # read properly formatted lines in config file into a dic
         try:
             config = {}
@@ -399,7 +399,10 @@ class Server:
         except IOError:
             self.saved_game = False
         if self.saved_game:
-            answer = raw_input("Would you like to continue your saved game from %s? (Y/n) " % time.ctime(os.path.getmtime("game_data/vars.data")))
+            if not autoload:
+                answer = raw_input("Would you like to continue your saved game from %s? (Y/n) " % time.ctime(os.path.getmtime("game_data/vars.data")))
+            else:
+                answer = "Y"
             if answer == "Y" or answer == "y":
                 print "Loading saved game..."
                 self._loadGame()
@@ -583,11 +586,14 @@ class Server:
         os.remove("game_data/deck.data")
 
 if __name__=='__main__':
-    server = Server()
-    server.configureServer()
-    server.getPlayers()
-    try:
-        server.driver()
-    except RuntimeError as error:
-        if error.message == "socket connection broken":
-            print "Player has disconnected, relaunch server to resume game"
+    autoload = False
+    while 1:
+        server = Server()
+        server.configureServer(autoload=autoload)
+        server.getPlayers()
+        try:
+            server.driver()
+        except RuntimeError as error:
+            if error.message == "socket connection broken":
+                print "Player has disconnected, relaunching server..."
+                autoload = True
