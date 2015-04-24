@@ -118,8 +118,8 @@ class Client:
 
 if __name__=='__main__':
     client = Client()
-    client.joinServer()
     try:
+        client.joinServer()
         client.playGame()
     except RuntimeError as error:
         client.ui.cleanUp()
@@ -132,6 +132,10 @@ if __name__=='__main__':
         client.client.close()
         print "Lost connection to server, player may have disconnected\n" + \
                "Check with server admin and attempt to rejoin"
+    except KeyboardInterrupt:
+        client.ui.cleanUp()
+        client.client.close()
+        print "\nQuitting..."
     except:
         client.ui.cleanUp()
         client.client.close()

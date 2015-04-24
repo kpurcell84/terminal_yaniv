@@ -36,6 +36,7 @@ logging.basicConfig(format=FORMAT)
 class JsonSocket(object):
 	def __init__(self, address='127.0.0.1', port=5489):
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.conn = self.socket
 		self._timeout = None
 		self._address = address

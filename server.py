@@ -339,6 +339,7 @@ class Server:
                 self.host_ip = config['host_ip']
                 self.server = jsocket.JsonServer(port=self.port, address=self.host_ip)
             except:
+                print sys.exc_info()
                 print "host_ip not valid"
                 sys.exit(1)
         else:
@@ -590,12 +591,20 @@ if __name__=='__main__':
     autoload = False
     while 1:
         server = Server()
-        server.configureServer(autoload=autoload)
-        server.getPlayers()
         try:
+            server.configureServer(autoload=autoload)
+            server.getPlayers()
             server.driver()
         except RuntimeError as error:
             if error.message == "socket connection broken":
                 print "Player has disconnected, relaunching server..."
                 server.server.close()
                 autoload = True
+        except socket.error:
+            print "Player has disconnected, relaunching server..."
+            server.server.close()
+            autoload = True
+        except KeyboardInterrupt:
+            print "\nShutting down server..."
+            server.server.close()
+            sys.exit(0)

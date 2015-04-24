@@ -434,10 +434,10 @@ class RenderUI:
         
         while 1:
             c = stdscr.getch()
-            if c == ord('q'):
-                self.cleanUp()
-                sys.exit(0)
-            elif c == curses.KEY_RIGHT:
+            # if c == ord('q'):
+            #     self.cleanUp()
+            #     sys.exit(0)
+            if c == curses.KEY_RIGHT:
                 self._nextCard(is_hand)
             elif c == curses.KEY_LEFT:
                 self._prevCard(is_hand)
