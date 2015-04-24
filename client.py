@@ -121,6 +121,17 @@ if __name__=='__main__':
     client.joinServer()
     try:
         client.playGame()
+    except RuntimeError as error:
+        client.ui.cleanUp()
+        client.client.close()
+        if error.message == "socket connection broken":
+            print "Lost connection to server, player may have disconnected\n" + \
+           "Check with server admin and attempt to rejoin"  
     except socket.error:
-        print "Lost connection to server, player may have disconnected\n \
-               Check with server admin and attempt to rejoin"
+        client.ui.cleanUp()
+        client.client.close()
+        print "Lost connection to server, player may have disconnected\n" + \
+               "Check with server admin and attempt to rejoin"
+    except:
+        client.ui.cleanUp()
+        client.client.close()

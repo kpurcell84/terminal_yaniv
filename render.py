@@ -90,6 +90,12 @@ class RenderUI:
         self.select_win2.bkgd(' ', curses.color_pair(1))
         self.message_win.bkgd(' ', curses.color_pair(1))
 
+    def cleanUp(self):
+        curses.nocbreak()
+        self.stdscr.keypad(0)
+        curses.echo()
+        curses.endwin()
+
     def _nextCard(self, is_hand):
         # unbold cur_card
         self._displayCard(self.rcards[self.cur_card], False)
@@ -429,6 +435,7 @@ class RenderUI:
         while 1:
             c = stdscr.getch()
             if c == ord('q'):
+                self.cleanUp()
                 sys.exit(0)
             elif c == curses.KEY_RIGHT:
                 self._nextCard(is_hand)

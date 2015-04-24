@@ -584,6 +584,7 @@ class Server:
         os.remove("game_data/vars.data")
         os.remove("game_data/players.data")
         os.remove("game_data/deck.data")
+        self.server.close()
 
 if __name__=='__main__':
     autoload = False
@@ -596,4 +597,5 @@ if __name__=='__main__':
         except RuntimeError as error:
             if error.message == "socket connection broken":
                 print "Player has disconnected, relaunching server..."
+                server.server.close()
                 autoload = True
